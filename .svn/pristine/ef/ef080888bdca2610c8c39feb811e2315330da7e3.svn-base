@@ -1,0 +1,70 @@
+package kr.or.ddit.report.vo;
+
+import kr.or.ddit.comm.vo.BaseVO;
+
+public class ReportVO extends BaseVO{
+	private String typeId;
+	private String reportDt;
+	private String empId;
+	private String reportSt;
+	private String title;
+	private String content;
+	private String approver;
+	private String apprKind;
+	private String reportId;
+	public void setTypeId(String typeId) {
+		this.typeId = typeId; 
+	}
+	public String getTypeId() {
+		return typeId; 
+	}
+	public void setReportDt(String reportDt) {
+		this.reportDt = reportDt; 
+	}
+	public String getReportDt() {
+		return reportDt; 
+	}
+	public void setEmpId(String empId) {
+		this.empId = empId; 
+	}
+	public String getEmpId() {
+		return empId; 
+	}
+	public void setReportSt(String reportSt) {
+		this.reportSt = reportSt; 
+	}
+	public String getReportSt() {
+		return reportSt; 
+	}
+	public void setTitle(String title) {
+		this.title = title; 
+	}
+	public String getTitle() {
+		return title; 
+	}
+	public void setContent(String content) {
+		this.content = content; 
+	}
+	public String getContent() {
+		return content; 
+	}
+	public void setApprover(String approver) {
+		this.approver = approver; 
+	}
+	public String getApprover() {
+		return approver; 
+	}
+	public void setApprKind(String apprKind) {
+		this.apprKind = apprKind; 
+	}
+	public String getApprKind() {
+		return apprKind; 
+	}
+	public void setReportId(String reportId) {
+		this.reportId = reportId; 
+	}
+	public String getReportId() {
+		return reportId; 
+	}
+
+}

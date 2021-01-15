@@ -1,0 +1,119 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+	<meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+	<title>jQuery treeview</title>
+
+	<link rel="stylesheet" href="../jquery.treeview.css" />
+	<link rel="stylesheet" href="/css/organChartCSS/screen.css" />
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+	<script src="/js/organChartJS/jquery.treeview.js"></script>
+
+	
+	<style type="text/css">
+		body{
+			background: white;
+		}
+	</style>
+	
+	
+	<script>
+	
+		$(function(){
+			
+			$.ajax({
+				url		: "/busiTree/businessTreeEmpDept",
+				dataType: "json",
+				method	: "post",
+				success	: function(data){
+					
+					console.log("data : ", data);
+					
+					var businessTreeList = data.businessTreeList;
+					
+					var TreeViewTag = "";
+					
+					for(var i=0; i<businessTreeList.length; i++){
+						
+						if(businessTreeList[i].upperDeptId == '0000'){
+							
+							var busiBu = businessTreeList[i].deptId;
+							
+							TreeViewTag += "	<li>";
+							TreeViewTag += "		<span>"+businessTreeList[i].deptName+"</span>";
+							
+							TreeViewTag += "		<ul>";
+							TreeViewTag += "			<li>"+businessTreeList[i].empNm+" "+businessTreeList[i].jobtitle+"</li>";
+							TreeViewTag += "		</ul>";
+							
+							for(var j=0; j<businessTreeList.length; j++) {
+								
+								
+								if(businessTreeList[j].upperDeptId == busiBu){
+									var busiTeam = businessTreeList[j].deptId;
+									
+									TreeViewTag += "			<ul>"
+									TreeViewTag += "				<li>"
+									TreeViewTag += "					<span>"+businessTreeList[j].deptName+"</span>"
+									TreeViewTag += "					<ul>"
+									
+									
+									var teamCnt = 0;
+									for(var k=0; k<businessTreeList.length; k++) {
+										if(businessTreeList[k].deptId == busiTeam) {
+											TreeViewTag += "				<li>"+businessTreeList[k].empNm+" "+businessTreeList[k].jobtitle+"</li>"
+											teamCnt++;
+										}
+									}
+									j += teamCnt;
+									TreeViewTag += "				</ul>"
+									TreeViewTag += "			</li>"
+									TreeViewTag += "		</ul>"
+								}
+							}
+							TreeViewTag += "	</li>"
+						}
+					}
+					$("#gray").append(TreeViewTag);
+					$("#gray").treeview({collapsed: true});
+
+					
+				},
+				error	: function(error){
+					alert("error code : "+error.status);
+				}
+			});
+			
+		});
+	
+		
+	</script>
+
+</head>
+<body>
+
+		<h1 id="banner">
+		<a href="http://bassistance.de/jquery-plugins/jquery-plugin-treeview/">jQuery Treeview Plugin</a> Demo</h1>
+		<div id="main">
+
+		조직도
+	
+	
+	
+		<br><br><br><br><br><br>
+		<br><br><br><br><br><br>
+		
+		
+		<!-- 조직도 전체 -->
+		<ul id="gray" class="treeview-gray"></ul>
+	
+	</div>
+
+</body>
+</html>

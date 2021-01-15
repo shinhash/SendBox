@@ -1,0 +1,89 @@
+package kr.or.ddit.report.vo;
+
+import kr.or.ddit.comm.vo.BaseVO;
+
+public class ApprovLineVO extends BaseVO {
+
+	private String apprCurrEmp;
+	private String currJobId;
+	private String empId;
+	private String apprStep;
+	private String currJobNm;
+	private String currDeptNm;
+	private String currEmpNm;
+	private String approvLineId;
+	private String currDeptId;
+	private String apprKind;
+	private String typeId;
+	public String getApprCurrEmp() {
+		return apprCurrEmp;
+	}
+	public void setApprCurrEmp(String apprCurrEmp) {
+		this.apprCurrEmp = apprCurrEmp;
+	}
+	public String getCurrJobId() {
+		return currJobId;
+	}
+	public void setCurrJobId(String currJobId) {
+		this.currJobId = currJobId;
+	}
+	public String getEmpId() {
+		return empId;
+	}
+	public void setEmpId(String empId) {
+		this.empId = empId;
+	}
+	public String getApprStep() {
+		return apprStep;
+	}
+	public void setApprStep(String apprStep) {
+		this.apprStep = apprStep;
+	}
+	public String getCurrJobNm() {
+		return currJobNm;
+	}
+	public void setCurrJobNm(String currJobNm) {
+		this.currJobNm = currJobNm;
+	}
+	public String getCurrDeptNm() {
+		return currDeptNm;
+	}
+	public void setCurrDeptNm(String currDeptNm) {
+		this.currDeptNm = currDeptNm;
+	}
+	public String getCurrEmpNm() {
+		return currEmpNm;
+	}
+	public void setCurrEmpNm(String currEmpNm) {
+		this.currEmpNm = currEmpNm;
+	}
+	public String getApprovLineId() {
+		return approvLineId;
+	}
+	public void setApprovLineId(String approvLineId) {
+		this.approvLineId = approvLineId;
+	}
+	public String getCurrDeptId() {
+		return currDeptId;
+	}
+	public void setCurrDeptId(String currDeptId) {
+		this.currDeptId = currDeptId;
+	}
+	public String getApprKind() {
+		return apprKind;
+	}
+	public void setApprKind(String apprKind) {
+		this.apprKind = apprKind;
+	}
+	public String getTypeId() {
+		return typeId;
+	}
+	public void setTypeId(String typeId) {
+		this.typeId = typeId;
+	}
+	
+	
+	
+	
+
+}

@@ -1,0 +1,315 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+
+
+<style>
+	
+	#OrganChartDiv{
+	}
+	#jojikdo{
+		border: 1px solid black; 
+		height: 500px; 
+		overflow: auto; 
+	}
+	.orgchart{
+		width: 85%;
+		margin-left: 10%;
+		margin-right: 10%;
+	}
+	.node{
+	}
+	.node .title{
+		font-size: 25px;
+	}
+	
+</style>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/orgchart/2.1.10/css/jquery.orgchart.css" integrity="sha512-wlRlwEPGS5q/QcJ1YiHSUsapGaQGgwt4tJbmV4T+NX2XH14Vp385/PtaW27r1YmB0I5ThIx412MloXPnfcif2Q==" crossorigin="anonymous" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/orgchart/2.1.10/js/jquery.orgchart.js" integrity="sha512-Og26KyueYWeZgYpezqWlxa+td8Rqrx+Lw4wEdtewnYdb9Wt/IGBcuQl/i8HloEOxsaH4BM4XcVNldHRnDjrBOw==" crossorigin="anonymous"></script>
+<script>
+	$(function(){
+		
+		
+		$.ajax({
+			url		: "/dept/deptManageTree",
+			dataType: "json",
+			method	: "post",
+			success	: function(data){
+				
+				var deptTreeList = data.deptTreeList;
+				
+				var ceoDept = "";
+				for(var top=0; top<deptTreeList.length; top++){
+					//사장인경우
+					if(deptTreeList[top].upperDeptId == null){
+						ceoDept = deptTreeList[top].deptName;
+						break;
+					}
+				}
+				
+				var teamCnt = 0;
+				var busiCnt = 0;
+				busiOrgChart = [];
+				var busiTop = deptTreeList[0].deptId;
+				for(var i=1; i<deptTreeList.length; i++){
+					
+					if(deptTreeList[i].upperDeptId == busiTop){
+						
+						busiCnt++;
+						
+						var busiBu = deptTreeList[i].deptId;
+						
+						var businame = deptTreeList[i].deptName;
+						var busiheader = deptTreeList[i].deptHeadId; // 사원번호 전부 가져온 다음 일치하는 id의 사원이름을 표시(나중에)
+						
+						teamOrgChart = [];
+						for(var j=1; j<deptTreeList.length; j++) {
+							
+							if(deptTreeList[j].upperDeptId == busiBu){
+								teamCnt++;
+								var teamname = deptTreeList[j].deptName;
+								var teamheader = deptTreeList[j].deptHeadId; // 사원번호 전부 가져온 다음 일치하는 id의 사원이름을 표시(나중에)
+								
+								var teamInfo = {'name'  : teamname,
+												'title' : teamheader };
+								teamOrgChart.push(teamInfo);
+							}
+						}
+						if(teamCnt > 0){
+							var busiInfo = { 'name'	    : businame,
+								   	 		 'title'    : busiheader,
+								   	 		 'children' : teamOrgChart };
+							busiOrgChart.push(busiInfo);
+						}else{
+							var busiInfo = { 'name'	    : businame,
+						   	 		 		 'title'    : busiheader };
+							busiOrgChart.push(busiInfo);
+						}
+					}
+				}
+				
+			
+				
+				var datasource = {
+				  'name': ceoDept,
+				  'title': 'CEO',
+				  'children': [
+				    { 'name': 'Bo Miao', 'title': 'department manager' },
+				    { 'name': 'Su Miao', 'title': 'department manager',
+				      'children': [
+				        { 'name': 'Tie Hua', 'title': 'senior engineer' },
+				        { 'name': 'Hei Hei', 'title': 'senior engineer' }
+				      ]
+				    }
+				  ]
+				};
+				var deptData = {
+				  'name': ceoDept,
+				  'title': 'CEO',
+				  'children': busiOrgChart 
+				};
+				
+				
+				
+				console.log("datasource = ", datasource);
+				console.log("deptData = ", deptData);
+				
+				
+
+				$('#chart-container').orgchart({
+				  'data' : deptData,
+				  'depth': 3,
+				  'nodeContent': 'title'
+				});
+				
+				
+				//조직도 자료
+				var deptTreeList = data.deptTreeList;
+				
+				var TreeViewTag = "";
+				
+				for(var top=0; top<deptTreeList.length; top++){
+					console.log(deptTreeList[top].upperDeptId);
+					//사장인경우
+					if(deptTreeList[top].upperDeptId == null){
+						TreeViewTag += "	<li>";
+						TreeViewTag += "		<span>"+deptTreeList[top].deptName+"</span>";
+						
+						var busiTop = deptTreeList[top].deptId;
+						
+						for(var i=0; i<deptTreeList.length; i++){
+							
+							if(deptTreeList[i].upperDeptId == busiTop){
+								
+								var busiBu = deptTreeList[i].deptId;
+								
+								TreeViewTag += "	<li>";
+								TreeViewTag += "		<span>"+deptTreeList[i].deptName+"</span>";
+								
+								for(var j=0; j<deptTreeList.length; j++) {
+									
+									if(deptTreeList[j].upperDeptId == busiBu){
+										var busiTeam = deptTreeList[j].deptId;
+										
+										TreeViewTag += "			<ul>";
+										TreeViewTag += "				<li>";
+										TreeViewTag += "					<span>"+deptTreeList[j].deptName+"</span>";
+										TreeViewTag += "				</li>";
+										TreeViewTag += "			</ul>";
+									}
+								}
+								TreeViewTag += "	</li>";
+							}
+						}
+						TreeViewTag += "	</li>";
+					}
+					
+				}
+				$("#gray").append(TreeViewTag);
+				$("#gray").treeview({collapsed: true});
+			},
+			error	: function(error){
+				alert("error code : "+error.status);
+			}
+		});
+		
+	});
+</script>
+	
+	
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    <!-- Page Heading -->
+                    <h2 class="h3 mb-2 text-gray-800"><i class="fas fa-user-friends" style="margin-left: 10px;"></i>&nbsp&nbsp 부서관리</h2>
+                    <br>
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                    
+                    
+                        <div class="card-body">
+                            <div class="table-responsive" style="overflow: hidden;">
+                            
+                            
+                            	<div id="chart-container"></div>
+                            
+                            
+				
+								<table class="table table-bordered" id=""  cellspacing="0">
+	                            	<tr>
+	                                	<td>
+		                                 	<!-- 조직도 이용 결재선 추가 화면  -->
+											<div id="main">
+												<input type="hidden" class="hiddenInfo" id="addEmpInfoName" />
+												<input type="hidden" class="hiddenInfo" id="addEmpInfoDept" />
+												<input type="hidden" class="hiddenInfo" id="addEmpInfoId" />
+												<input type="hidden" class="hiddenInfo" id="addEmpInfoJobtitle" />
+												<input type="hidden" class="hiddenInfo" id="addEmpInfoJobId" />
+												<div id="OrganChartDiv">
+													<!-- 조직도 div -->
+													<div id="jojikdo">
+														<!-- 조직도 전체 -->
+														<ul id="gray" class="treeview-gray"></ul>
+													</div>
+													
+													<!-- <input type="button" id="addAproveLineBtn" value="결재라인등록" /> -->
+													<button class="btn btn-warn	ing" type="button" id="writeBtn" style="float: right;">부서정보 변경</button>
+													<button class="settingViewBtn btn btn-primary" type="button" id="addApprover" style="float: right; margin-right: 10px;">부서정보 추가</button>
+												</div>
+											</div>
+	                                 	</td>
+	                             
+	                                 
+	                                 </tr>
+                                   
+                                </table>
+                            </div>
+                            
+                            
+						</div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+</body>
+
+
+
+
+<style>
+	.orgchart{
+		background: white;
+	}
+	
+/* 	<tr class="lines"> */
+/* 		<td class="rightLine"></td> */
+/* 		<td class="leftLine topLine"></td> */
+/* 		<td class="rightLine topLine"></td> */
+/* 		<td class="leftLine"></td> */
+/* 	</tr> */
+	
+	
+	
+	
+	#1e2c54
+	.orgchart .lines .rightLine{
+		border-color: #1e2c54;
+	}
+	.orgchart .lines .leftLine .topLine{
+		border-color: #1e2c54;
+	}
+	.orgchart .lines .rightLine .topLine{
+		border-color: #1e2c54;
+	}
+	.orgchart .lines .leftLine{
+		border-color: #1e2c54;
+	}
+
+
+
+
+
+	.orgchart .node .title{
+        background-color: #1e2c54;
+    }
+    div.orgChart div.node.level1.special {
+        background-color: white;
+    }
+    div.orgChart div.node.level2 {
+        background-color: #cefbce;
+    }
+    div.orgChart div.node.level3 {
+        background-color: #e0cefb;
+    }
+</style>
+
+
+

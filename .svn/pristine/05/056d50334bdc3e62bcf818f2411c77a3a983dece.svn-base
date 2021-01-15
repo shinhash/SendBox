@@ -1,0 +1,86 @@
+package kr.or.ddit.business.schedule.controller;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import kr.or.ddit.business.schedule.service.ScheduleService;
+import kr.or.ddit.business.schedule.vo.ScheduleVO;
+import kr.or.ddit.emp.vo.EmpVO;
+
+@Controller
+public class ScheduleController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ScheduleController.class);
+	
+	@Resource(name="scheduleService")
+	ScheduleService scheduleService;
+	
+	@RequestMapping("/schedule")
+	public String getSchedule(Model model,ScheduleVO scheVo) {
+		logger.debug("schedule scheVo : {} ",scheVo);
+		List<ScheduleVO> vo = null;
+		try {
+			vo = scheduleService.getSchedule(scheVo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		logger.debug("schedule : {} ",vo);
+		model.addAttribute("showSchedule", vo);
+		
+		return "tiles/schedule/calendar";
+	}
+	
+	@RequestMapping(value = "/addSchedule", method = RequestMethod.POST)
+	public String addSchedule(String scheduleData, HttpSession session){
+//		{"content":"123","startDt":["2020-12-04","10:00"],"endDt":["2020-12-04","14:00"]}
+		scheduleData = scheduleData.replaceAll("\\{", "");
+		scheduleData = scheduleData.replaceAll("\\}", "");
+		scheduleData = scheduleData.replaceAll("\"", "");
+//		scheduleData = scheduleData.replaceAll("\\[", "");
+//		scheduleData = scheduleData.replaceAll("\\]", "");
+		logger.debug("scheduleData : {} ",scheduleData);
+		
+		String[] arr1 = scheduleData.split(",");
+//		0content:zzz
+//		1startDt:2020-12-04
+//		209:00
+//		3endDt:2020-12-04
+//		413:00 
+		ScheduleVO vo = new ScheduleVO();
+		for(int i=0; i<arr1.length; i++) {
+			String[] arr2 = arr1[i].split(":");
+			
+			if(i == 0) {
+				vo.setContent(arr2[1]);
+			} else if (i == 1) {
+				vo.setStartDt(arr2[1]);
+			} else if (i == 2) {
+				vo.setEndDt(arr2[1]);
+			}
+		}
+		EmpVO empVo = (EmpVO) session.getAttribute("EMP");
+		vo.setDeptId(empVo.getDeptId());
+		try {
+			scheduleService.addSchedule(vo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "jsonView";
+	}
+	
+	@RequestMapping("/schedulePopup")
+	public String schedulePopupView() {
+
+		return "schedule/schedulePopup";
+	}
+	
+}

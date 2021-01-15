@@ -1,0 +1,32 @@
+package kr.or.ddit.vacation.service;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.vacation.dao.VacationMapperDao;
+import kr.or.ddit.vacation.vo.VacationVO;
+
+@Service("vacationService")
+public class VacationService {
+
+	
+	@Resource(name = "vacationMapperDao")
+	private VacationMapperDao vacationMapperDao;
+	
+	
+	
+	public List<VacationVO> selectEmpVacateInfo(VacationVO vacateVO){
+		
+		List<VacationVO> empVacateList = null;
+		try {
+			empVacateList = vacationMapperDao.selectEmpVacateInfo(vacateVO);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return empVacateList;
+	}
+	
+}

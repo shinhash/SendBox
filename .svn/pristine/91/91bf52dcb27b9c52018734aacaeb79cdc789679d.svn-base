@@ -1,0 +1,14 @@
+package kr.or.ddit.salary.dao;
+
+import java.util.List;
+
+import egovframework.rte.psl.dataaccess.mapper.Mapper;
+import kr.or.ddit.salary.vo.SalaryVO;
+
+@Mapper("salaryMapperDao")
+public interface SalaryMapperDao {
+	List<SalaryVO> getSalaryList(SalaryVO vo) throws Exception;
+	
+	SalaryVO getSalary(SalaryVO vo) throws Exception;
+	
+}

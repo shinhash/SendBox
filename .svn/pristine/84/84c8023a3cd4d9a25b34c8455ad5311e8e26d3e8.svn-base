@@ -1,0 +1,36 @@
+package kr.or.ddit.business.meeting.controller;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import kr.or.ddit.business.meeting.service.MeetingService;
+import kr.or.ddit.business.meeting.vo.MeetingVO;
+
+@Controller
+public class MeetiongController {
+	private static final Logger logger = LoggerFactory.getLogger(MeetiongController.class);
+
+	@Resource(name = "meetingService")
+	MeetingService meetingService;
+
+	@RequestMapping("/meeting")
+	public String getMeeting(Model model) {
+		List<MeetingVO> list = null;
+		try {
+			list = meetingService.getMeeting();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		model.addAttribute("showSchedule", list);
+
+		return "tiles/meeting/meeting";
+	}
+
+}

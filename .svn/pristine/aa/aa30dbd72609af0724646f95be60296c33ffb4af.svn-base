@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.attend.dao.AttendMapperDao">
+	
+	<select id="getAttend" parameterType="kr.or.ddit.attend.vo.AttendVO" resultType="kr.or.ddit.attend.vo.AttendVO">
+		SELECT
+		    attend_seq,
+		    emp_id,
+		    attend_dt,
+		    work_time,
+		    home_time,
+		    remark
+		FROM
+   			attend
+   			
+   			<where>
+   				<if test="empId != null">
+					<if test="attendDt != null">
+						and emp_id = #{empId} and attend_dt = #{attendDt}
+					</if>   				
+   				</if>
+   			</where>
+	</select>
+	
+	
+	<insert id="insertAttend" parameterType="kr.or.ddit.attend.vo.AttendVO">
+		INSERT INTO ATTEND(attend_seq, emp_id, attend_dt, work_time, home_time)
+		VALUES (attend_seq.nextval, #{empId}, #{attendDt}, #{workTime}, #{homeTime})
+	</insert>
+	
+	<update id="updateAttend" parameterType="kr.or.ddit.attend.vo.AttendVO">
+		UPDATE ATTEND SET HOME_TIME = #{homeTime} WHERE emp_id = #{empId} and attend_dt = #{attendDt}
+	</update>
+	
+	<select id="getAttendList" parameterType="kr.or.ddit.attend.vo.AttendVO" resultType="kr.or.ddit.attend.vo.AttendVO">
+		  SELECT
+			    attend_seq,
+			    emp_id,
+			    TO_CHAR(attend_dt,'YYYY-MM-DD') as attend_dt,
+			    work_time,
+			    home_time,
+			    remark
+			FROM
+			    attend
+			    where to_char(attend_dt, 'yyyy/mm') like '%' || '2020/12' || '%' 
+			      and emp_id = #{empId} 
+	</select>
+	
+	<select id="selectAttendTotCnt" parameterType="kr.or.ddit.attend.vo.AttendVO" resultType="kr.or.ddit.attend.vo.AttendVO">
+		SELECT count(*) FROM attend
+	
+	</select>
+	
+	<select id="selectAttend" parameterType="kr.or.ddit.attend.vo.AttendVO" resultType="kr.or.ddit.attend.vo.AttendVO">
+		SELECT
+	    attend_seq,
+	    emp_id,
+	    TO_CHAR(attend_dt,'YYYY-MM-DD') as attend_dt,
+	    work_time,
+	    home_time,
+	    remark
+	FROM
+	    attend
+	    where to_char(attend_dt, 'yyyy/mm') like '%' || #{attendDt} || '%' 
+	      and emp_id = #{empId} 
+	</select>
+	
+</mapper>

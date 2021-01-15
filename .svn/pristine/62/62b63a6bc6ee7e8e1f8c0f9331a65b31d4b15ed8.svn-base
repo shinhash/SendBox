@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.business.library.dao.LibrayMapperDao">
+
+<select id="getLibrary" parameterType="kr.or.ddit.business.library.vo.LibraryVO" resultType="kr.or.ddit.business.library.vo.LibraryVO">
+	SELECT
+	    file_seq,
+	    library_id,
+	    file_real_nm,
+	    file_path,
+	    file_icon_id
+	FROM
+	    lib_file
+</select>
+
+<select id="deptIdSelect" parameterType="kr.or.ddit.business.library.vo.LibraryVO" resultType="kr.or.ddit.business.library.vo.LibraryVO">
+	select empT.emp_id,
+            deptT.dept_name as dept_id,
+            libT.library_nm as library_nm
+    from (select *
+          from dept) deptT,
+          (SELECT *
+           FROM
+            library) libT,
+           (select *
+          from emp) empT
+    where empT.dept_id = deptT.dept_id 
+      and empT.EMP_QUIT_YN='N' 
+      and libT.dept_id = empT.dept_id
+      <if test="empId != null">
+	      and deptT.dept_id = #{empId}
+      </if>
+</select>
+
+
+</mapper>

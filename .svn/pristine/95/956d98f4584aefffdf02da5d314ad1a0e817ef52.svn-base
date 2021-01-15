@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.salary.dao.SalaryMapperDao">
+
+<select id="getSalaryList" parameterType="kr.or.ddit.salary.vo.SalaryVO" resultType="kr.or.ddit.salary.vo.SalaryVO">
+	SELECT
+    salary_seq,
+    emp_id,
+    salary_dt,
+    salary_amt
+FROM
+    salary
+    <where>
+  		<if test="empId != null">
+			and emp_id = #{empId} 
+  		</if>
+  	</where>
+</select>
+
+
+<select id="getSalary" parameterType="kr.or.ddit.salary.vo.SalaryVO" resultType="kr.or.ddit.salary.vo.SalaryVO">
+	SELECT
+    salary_seq,
+    emp_id,
+    salary_dt,
+    salary_amt
+FROM
+    salary
+where salary_dt = #{salaryDt} and emp_id = #{empId} 
+</select>
+	
+	
+</mapper>

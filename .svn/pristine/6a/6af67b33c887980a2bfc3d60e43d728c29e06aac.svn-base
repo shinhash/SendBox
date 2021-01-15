@@ -1,0 +1,14 @@
+package kr.or.ddit.freeboard.service;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.freeboard.dao.FreeBoardMapper;
+
+@Service("freeBoardService")
+public class FreeBoardService {
+
+	@Resource(name="freeBoardMapper")
+	private FreeBoardMapper freeBoardMapper;
+}

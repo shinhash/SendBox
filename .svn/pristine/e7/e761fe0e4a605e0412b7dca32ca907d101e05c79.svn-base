@@ -1,0 +1,13 @@
+package kr.or.ddit.dept.dao;
+
+import java.util.List;
+
+import egovframework.rte.psl.dataaccess.mapper.Mapper;
+import kr.or.ddit.dept.vo.DeptVO;
+
+@Mapper("deptMapperDao")
+public interface DeptMapperDao {
+
+	List<DeptVO> selectDeptTreeList() throws Exception;
+
+}

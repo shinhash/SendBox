@@ -1,0 +1,51 @@
+package kr.or.ddit.vacation.contorller;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import kr.or.ddit.emp.vo.EmpVO;
+import kr.or.ddit.vacation.service.VacationService;
+import kr.or.ddit.vacation.vo.VacationVO;
+
+@Controller
+public class VacationController {
+
+	
+	@Resource(name = "vacationService")
+	private VacationService vacationService;
+	
+	
+	
+	
+	
+	@RequestMapping("/vacate/empVacateInfo")
+	public String empVacateInfo(HttpSession session, Model model) {
+		
+		EmpVO empVO = (EmpVO) session.getAttribute("EMP");
+		
+		VacationVO vacateVO = new VacationVO();
+		vacateVO.setEmpId(empVO.getEmpId());
+		
+		List<VacationVO> empVacateList = vacationService.selectEmpVacateInfo(vacateVO);
+		int myUseVacateCnt = 0;
+		
+		
+		if(empVacateList != null && empVacateList.size() > 0) {
+			for(VacationVO myVacateInfo : empVacateList) {
+				myUseVacateCnt += myVacateInfo.getVacateCnt();
+			}
+		}
+		model.addAttribute("myUseVacateCnt", myUseVacateCnt);
+		model.addAttribute("empVacateList", empVacateList);
+		
+		
+		return "jsonView";
+	}
+	
+}

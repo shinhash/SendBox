@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.report.dao.ReportMapperDao">
+	
+	<select id="getRepostList" parameterType="kr.or.ddit.report.vo.ReportVO" resultType="kr.or.ddit.report.vo.ReportVO">
+SELECT a. *
+   FROM(
+		SELECT
+			rownum as rn,
+		    report_id,
+		    emp_id,
+		    type_id,
+		    report_dt,
+		    report_st,
+		    title,
+		    content,
+		    approver,
+		    appr_kind
+		FROM
+	    	report
+	    <where>
+	    	<if test="empId != null and reportSt != null">
+	    		and emp_id = #{empId} and report_st = #{reportSt}
+	    	</if>
+	    </where>
+	    )a
+	    WHERE rn between (#{pageIndex}-1) * #{recordCountPerPage} + 1 and #{pageIndex} * #{recordCountPerPage}
+	</select>
+	
+	<select id="selectReportTotCnt" resultType="java.lang.Integer" parameterType="kr.or.ddit.report.vo.ReportVO">
+	SELECT count(*)
+	  FROM report
+	  <where>
+	    	<if test="empId != null and reportSt != null">
+	    		and emp_id = #{empId} and report_st = #{reportSt}
+	    	</if>
+	    </where>
+</select>
+
+<!-- 기안문 양식 가져오기  -->
+<select id="selectReportTypeList" resultType="kr.or.ddit.report.vo.ReportTypeVO">
+SELECT * 
+  FROM report_type
+</select>
+
+
+
+</mapper>

@@ -1,0 +1,16 @@
+package kr.or.ddit.report.dao;
+
+import java.util.List;
+
+import egovframework.rte.psl.dataaccess.mapper.Mapper;
+import kr.or.ddit.report.vo.ReportVO;
+
+@Mapper("reportMapperDao")
+public interface ReportMapperDao {
+	
+	
+	List<ReportVO> getRepostList(ReportVO reportVo) throws Exception;
+
+	int selectReportTotCnt(ReportVO reportVo) throws Exception;
+	
+}

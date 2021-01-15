@@ -1,0 +1,130 @@
+<%@page import="kr.or.ddit.business.meeting.vo.MeetingVO"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.List"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+	<%List<MeetingVO> list = (ArrayList<MeetingVO>)request.getAttribute("showSchedule"); %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+<title>풀캘린더</title>
+<style type="text/css">
+@font-face {
+    font-family: 'InfinitySans-RegularA1';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/InfinitySans-RegularA1.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+body{
+  font-family: 'InfinitySans-RegularA1';
+}
+
+
+
+.add-button {
+	position: absolute;
+	top: 1px;
+	right: 230px;
+	background: #2C3E50;
+	border: 0;
+	color: white;
+	height: 35px;
+	border-radius: 3px;
+	width: 157px;
+	
+}
+
+
+.add-button {
+	position: absolute;
+	top: 1px;
+	right: 230px;
+	background: #2C3E50;
+	border: 0;
+	color: white;
+	height: 35px;
+	border-radius: 3px;
+	width: 157px;
+}
+
+.fc-day-number{
+	color : black;
+	
+}
+</style>
+<link href='/packages/core/main.css' rel='stylesheet' />
+<link href='/packages/daygrid/main.css' rel='stylesheet' />
+<link href='/packages/timegrid/main.min.css' rel='stylesheet' />
+<script src='/packages/core/main.js'></script>
+<script src='/packages/daygrid/main.js'></script>
+<script src="/packages/interaction/main.min.js"></script>
+<script src="/packages/timegrid/main.min.js"></script>
+<script>
+
+	function click_add() {
+		var url = "/meeting/meetSchedulePopup";
+		var name = "schedulePopup";
+		var option = "width = 500, height = 500 left = 100, top=50,location=no";
+		window.open(url, name, option)
+	};
+
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() { 
+	var calendarEl = document.getElementById('calendar'); 
+	var calendar = new FullCalendar.Calendar(calendarEl, 
+			{plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'list' ],
+		header: {left: 'prev,next today',
+			center: 'title',
+			right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'},
+			locale : "ko",
+			navLinks: true, // can click day/week names to navigate views
+			businessHours: true, // display business hours
+			editable: false,
+			events: [ 
+				<% for (int i = 0; i < list.size(); i++) {
+					MeetingVO vo = (MeetingVO)list.get(i); %> 
+					{
+						title : '<%= vo.getMeetroomId() %>',
+						start : '<%= vo.getReservStartDt() %>',
+						end : '<%= vo.getReservEndDt()%>',
+						id : '<%= vo.getReservSeq() %>',
+						<% if(vo.getDeptId().equals("0001")){%>
+							color : "#6CBCF1"
+						<%}else if(vo.getDeptId().equals("0002")){%>
+							color : "#FFA7A7"
+						<%}else{%>
+							color : "#D1B2FF"
+						<%}%>
+						}, 
+						<%} %>
+						{
+							title : 'default',
+							start : "2019-01-01",
+							end : "2019-01-01"
+							}
+						]
+			, eventClick:function(info) {
+             var id = info.event.id 
+             var url = "/selectMeeting?id="+id;
+     		var name = "select";
+     		var option = "width = 600, height =500 left = 100, top=50,location=no";
+     		window.open(url, name, option)
+             
+             
+         }
+			});
+
+	calendar.render(); 
+}); 
+</script>
+
+<body>
+	<div id='calendar' style="width: 56%;height: 70%; margin-left: 20%; margin-top:3%;">
+			<button class="add-button" type="button" onclick="click_add();" style="margin-top: 6.3%;">회의실 예약</button>
+	</div>
+</body>
+</html>
+

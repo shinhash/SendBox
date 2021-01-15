@@ -1,0 +1,19 @@
+package kr.or.ddit.business.meeting.dao;
+
+import java.util.List;
+
+import egovframework.rte.psl.dataaccess.mapper.Mapper;
+import kr.or.ddit.business.meeting.vo.MeetingVO;
+
+@Mapper("meetingMapperDao")
+public interface MeetingMapperDao {
+	
+	List<MeetingVO> getMeeting() throws Exception;
+	
+	int addMeeting(MeetingVO vo) throws Exception;
+
+	int deleteMeeting(MeetingVO vo);
+
+	MeetingVO selectMeeting(MeetingVO vo);
+	
+}

@@ -1,0 +1,17 @@
+package kr.or.ddit.alarm.dao;
+
+import java.util.List;
+
+import egovframework.rte.psl.dataaccess.mapper.Mapper;
+import kr.or.ddit.alarm.vo.AlarmVO;
+
+@Mapper("alarmMapperDao")
+public interface AlarmMapperDao {
+
+	List<String> selectEmpIdList(String chatRoomId) throws Exception;
+
+	int insertChatAlarm(AlarmVO alarm) throws Exception;
+
+	List<AlarmVO> selectAlarmInfoList(String empId) throws Exception;
+
+}

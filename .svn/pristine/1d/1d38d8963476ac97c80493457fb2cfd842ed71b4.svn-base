@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.salary.dao.SalaryMapperDao">
+
+<select id="getSalaryList" parameterType="kr.or.ddit.salary.vo.SalaryVO" resultType="kr.or.ddit.salary.vo.SalaryVO">
+	SELECT
+    salary_seq,
+    emp_id,
+    salary_dt,
+    salary_amt
+FROM
+    salary
+    <where>
+  		<if test="empId != null">
+			and emp_id = #{empId} 
+  		</if>
+  	</where>
+</select>
+
+<select id="getSalary" parameterType="kr.or.ddit.salary.vo.SalaryVO" resultType="kr.or.ddit.salary.vo.SalaryVO">
+	SELECT
+    salary_seq,
+    emp_id,
+    salary_dt,
+    salary_amt
+FROM
+    salary
+where salary_dt = #{salaryDt} and emp_id = #{empId} 
+</select>
+
+
+<select id="getMonthSalary" parameterType="Map" resultType="String">
+<![CDATA[
+select round(A.jobtitle_money +D.ddd, -3) as jobtile_money
+from job_money A, 
+(select
+SUM(
+CASE WHEN (TO_DATE(C.home_time,'HH24:MI:SS')-TO_DATE(180000,'HH24:MI:SS'))>0 THEN (TO_DATE(C.home_time,'HH24:MI:SS')-TO_DATE(180000,'HH24:MI:SS'))*24
+WHEN (TO_DATE(C.home_time,'HH24:MI:SS')-TO_DATE(180000,'HH24:MI:SS'))*24<=0 THEN 0 END)*30000 AS ddd from attend C WHERE C.EMP_ID = #{empId} AND TO_CHAR(C.ATTEND_DT, 'YYYY-MM-DD') like #{month}||'%')
+D
+where A.jobtitle_id in (select B.jobtitle_id
+                        from emp B
+                        where B.emp_id = #{empId})
+and jobtitle_mo_id in (select max(A.jobtitle_mo_id) from job_money A where A.jobtitle_id in (select B.jobtitle_id
+                        from emp B
+                        where B.emp_id = #{empId}))
+]]>
+</select>
+
+<select id="selectAllId" resultType="java.lang.String">
+select emp_id from emp where emp_quit_yn = 'N'
+</select>
+
+
+</mapper>

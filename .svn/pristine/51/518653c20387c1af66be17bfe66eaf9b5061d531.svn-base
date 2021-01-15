@@ -1,0 +1,18 @@
+package kr.or.ddit.business.library.dao;
+
+import java.util.List;
+
+import egovframework.rte.psl.dataaccess.mapper.Mapper;
+import kr.or.ddit.business.library.vo.LibVO;
+
+@Mapper("libMapperDao")
+public interface LibMapperDao {
+	
+	/**
+	 * 파일 리스트를 출력하는 메서드
+	 * @param libVO
+	 * @return List
+	 * @throws Exception
+	 */
+	List<LibVO> libList(LibVO libVO) throws Exception;
+}

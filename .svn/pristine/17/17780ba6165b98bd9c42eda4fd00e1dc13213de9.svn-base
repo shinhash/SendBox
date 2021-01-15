@@ -1,0 +1,46 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%> 
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
+<script>
+</script>
+<style>
+</style>
+
+
+
+<div id="progress" style="width: 100%">
+	<progress value="${dataSize }" max="${total }" style="width: 96%"></progress>
+</div>
+
+${dataSize }
+${total }
+${libraryId }
+<table class="table table-bordered" id="dataTable" width="100%"
+		cellspacing="0" style="text-align: center;">
+		<thead>
+			<tr>
+				<th>파일명</th>
+				<th>작성자</th>
+				<th>마지막 수정날짜</th>
+				<th>파일크기</th>
+				<th>확장자</th>
+			</tr>
+		</thead>
+		<tbody>
+			<c:forEach items="${libList }" var="lib">
+				<tr>
+					<td>${lib.fileRealNm }</td>
+					<td>${lib.empId }</td>
+					<td>
+					<fmt:parseDate value = "${lib.fileInDt }" pattern="yyyy-MM-dd HH:mm" var="date"/>
+					<fmt:formatDate value="${date}" pattern="yyyy-MM-dd HH:mm"/>
+					</td>
+					<td>${lib.fileSize }</td>
+					<td>${lib.fileIconId }</td>
+			</c:forEach>
+		</tbody>
+	</table>
+</div>

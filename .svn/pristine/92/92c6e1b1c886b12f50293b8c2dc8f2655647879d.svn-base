@@ -1,0 +1,42 @@
+package kr.or.ddit.emp.controller;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import kr.or.ddit.emp.service.EmpService;
+import kr.or.ddit.notice.service.NoticeService;
+import kr.or.ddit.notice.vo.NoticeVO;
+
+
+
+@Controller
+public class MainController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(MainController.class);
+
+	@Resource(name="empService")
+	EmpService empService;
+	
+	@Resource(name = "noticeService")
+	NoticeService noticeService;
+
+	
+	@RequestMapping("/main")
+	public String mainView(Model model, NoticeVO noticeVO) {
+		
+		try {
+			model.addAttribute("NoticeList", noticeService.mainNoticeList(noticeVO));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "tiles/main/main";
+	}
+	
+	
+	
+}

@@ -1,0 +1,8 @@
+package kr.or.ddit.business.library.dao;
+
+import egovframework.rte.psl.dataaccess.mapper.Mapper;
+
+@Mapper("librayMapperDao")
+public interface LibrayMapperDao {
+	
+}

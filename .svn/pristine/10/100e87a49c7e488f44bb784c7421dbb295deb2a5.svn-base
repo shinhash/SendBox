@@ -1,0 +1,63 @@
+package kr.or.ddit.business.schedule.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import kr.or.ddit.business.schedule.service.ScheduleService;
+import kr.or.ddit.business.schedule.vo.ScheduleVO;
+
+@Controller
+public class ScheduleController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ScheduleController.class);
+	
+	@Resource(name="scheduleService")
+	ScheduleService scheduleService;
+	
+	@RequestMapping("/schedule")
+	public String getSchedule(Model model,ScheduleVO scheVo) {
+		logger.debug("schedule scheVo : {} ",scheVo);
+		List<ScheduleVO> vo = null;
+		try {
+			vo = scheduleService.getSchedule(scheVo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		logger.debug("schedule : {} ",vo);
+		model.addAttribute("showSchedule", vo);
+		
+		return "tiles/schedule/calendar";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/addSchedule", method = RequestMethod.POST)
+	public Map<Object,Object> addSchedule(@RequestBody ScheduleVO vo) {
+		Map<Object,Object>map = new HashMap<Object,Object>();
+		try {
+			scheduleService.addSchedule(vo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return map;
+	}
+	
+	@RequestMapping("/schedulePopup")
+	public String schedulePopupView() {
+
+		return "schedule/schedulePopup";
+	}
+	
+}

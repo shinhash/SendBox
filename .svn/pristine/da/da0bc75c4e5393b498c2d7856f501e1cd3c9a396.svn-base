@@ -1,0 +1,29 @@
+package kr.or.ddit.salary.service;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.salary.dao.SalaryMapperDao;
+import kr.or.ddit.salary.vo.SalaryVO;
+
+@Service("salaryService")
+public class SalaryService{
+	
+	@Resource(name="salaryMapperDao")
+	private SalaryMapperDao salaryMapperDao;
+	
+	public List<SalaryVO> getSalaryList(SalaryVO vo) throws Exception {
+		return salaryMapperDao.getSalaryList(vo);
+	}
+	
+	public SalaryVO getSalary(SalaryVO vo) throws Exception {
+		return salaryMapperDao.getSalary(vo);
+	}
+	
+	public List<String> selectAllId() throws Exception {
+		return salaryMapperDao.selectAllId();
+	}
+}

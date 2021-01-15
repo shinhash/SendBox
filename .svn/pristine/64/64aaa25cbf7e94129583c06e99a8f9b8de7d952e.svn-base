@@ -1,0 +1,42 @@
+package kr.or.ddit.business.library.controller;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import kr.or.ddit.business.library.service.LibService;
+import kr.or.ddit.business.library.vo.LibVO;
+import kr.or.ddit.emp.vo.EmpVO;
+
+@Controller
+public class LibraryController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(LibraryController.class);
+	
+	@Resource(name = "libService")
+	private LibService libService;
+	
+	@RequestMapping("/library")
+	public String libraryList(Model model, LibVO libVO, HttpSession session) {
+		
+		EmpVO empVO = (EmpVO)session.getAttribute("EMP");
+		libVO.setLibraryId(empVO.getDeptId());
+		try {
+			List<LibVO> libList = libService.libList(libVO);
+			logger.debug("libVO : {}", libVO);
+			model.addAttribute("libList", libList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "tiles/library/library";
+	}
+	
+	
+}

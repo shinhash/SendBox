@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.business.library.dao.LibrayMapperDao">
+
+<select id="getLibrary" parameterType="kr.or.ddit.business.library.vo.LibraryVO" resultType="kr.or.ddit.business.library.vo.LibraryVO">
+	SELECT
+	    file_seq,
+	    library_id,
+	    file_real_nm,
+	    file_path,
+	    file_icon_id
+	FROM
+	    lib_file
+</select>
+
+</mapper>

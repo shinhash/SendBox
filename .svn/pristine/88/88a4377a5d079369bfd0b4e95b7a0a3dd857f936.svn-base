@@ -1,0 +1,23 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%> 
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
+폴더 리스트 사이즈 : ${libList.size() }
+
+<c:forEach items="${libList }" var="lib" varStatus="i">
+	<div class="img ${lib.fileIconId }" fileSeq="${lib.fileSeq }">
+		<c:choose>
+			<c:when test="${lib.fileIconId  != null && lib.fileIconId != ''}">
+				<img src="/images/${lib.fileType }.png" class="type"><br>
+				 ${fn:substring(lib.fileRealNm,0,8) }
+<%-- 			 ${lib.fileRealNm } --%>
+			</c:when>
+			<c:when test="${lib.fileIconId  == null || lib.fileIconId  == ''}">
+				<img src="/images/empty.png" class="type"><br>
+				${lib.fileRealNm }
+			</c:when>
+		</c:choose>
+	</div>
+</c:forEach>

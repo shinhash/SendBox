@@ -1,0 +1,38 @@
+package kr.or.ddit.dept.controller;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import kr.or.ddit.dept.service.DeptService;
+import kr.or.ddit.dept.vo.DeptVO;
+
+@Controller
+public class DeptController {
+
+	
+	@Resource(name = "deptService")
+	private DeptService deptService;
+	
+	
+	@RequestMapping("/dept/deptManage")
+	public String deptManageView() {
+		return "tiles/dept/deptManageView";
+	}
+	
+	
+	@RequestMapping("/dept/deptManageTree")
+	public String deptManageTreeList(Model model) {
+		List<DeptVO> deptTreeList = deptService.selectDeptTreeList();
+		model.addAttribute("deptTreeList", deptTreeList);
+		return "jsonView";
+	}
+	
+	
+	
+	
+}

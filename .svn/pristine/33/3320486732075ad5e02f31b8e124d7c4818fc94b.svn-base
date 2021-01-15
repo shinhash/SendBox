@@ -1,0 +1,36 @@
+package kr.or.ddit.attend.service;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.attend.dao.AttendMapperDao;
+import kr.or.ddit.attend.vo.AttendVO;
+import kr.or.ddit.memo.dao.MemoMapper;
+
+@Service("attendService")
+public class AttendService{
+	
+	@Resource(name="attendMapperDao")
+	private AttendMapperDao attendMapperDao;
+	
+	
+	public int insertAttend(AttendVO attendVO) throws Exception {
+		return attendMapperDao.insertAttend(attendVO);
+	}
+	
+	public AttendVO getAttend(AttendVO attendVO) throws Exception {
+		return attendMapperDao.getAttend(attendVO);
+	}
+	
+	public int updateAttend(AttendVO attendVO) throws Exception {
+		return attendMapperDao.updateAttend(attendVO);
+	}
+	
+	public List<AttendVO> getAttendList(AttendVO attendVO) throws Exception {
+		return attendMapperDao.getAttendList(attendVO);
+	}
+	
+}

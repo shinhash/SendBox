@@ -1,0 +1,58 @@
+package kr.or.ddit.report.dao;
+
+import java.util.List;
+
+import egovframework.rte.psl.dataaccess.mapper.Mapper;
+import kr.or.ddit.report.vo.ApprovLineCounterVO;
+import kr.or.ddit.report.vo.ApprovLineListVO;
+import kr.or.ddit.report.vo.ApprovLineVO;
+import kr.or.ddit.report.vo.ReportTypeVO;
+import kr.or.ddit.report.vo.ReportVO;
+
+@Mapper("reportMapperDao")
+public interface ReportMapperDao {
+	
+	
+	List<ReportVO> getRepostList(ReportVO reportVo) throws Exception;
+
+	int selectReportTotCnt(ReportVO reportVo) throws Exception;
+	
+	/**
+	 * db에 저장된 모든 기안문 양식을 가져오는 메서드
+	 * @return	기안문 양식 리스트
+	 * @throws Exception
+	 */
+	List<ReportTypeVO> selectReportTypeList() throws Exception;
+
+	/**
+	 * 사원이 등록한 결재선 리스트
+	 * @param approvLineVo		사원의 사원번호를 담은 VO객체
+	 * @return				결재선 리스트
+	 * @throws Exception
+	 */
+	List<ApprovLineVO> selectApprovLineList(String empId) throws Exception;
+
+	/**
+	 * 결재선 이름별 결재 횟수
+	 * @param approvLineVo			사원의 사원번호를 담은 VO객체
+	 * @return				결재선 이름과 결재 횟수 정보를 담고 있는 VO객체 리스트
+	 * @throws Exception
+	 */
+	List<ApprovLineCounterVO> selectApprLineCounterList(String empId) throws Exception;
+
+	/**
+	 * 선택한 결재선을 db로부터 가져오는 메서드
+	 * @param approvLineVo		결재선의 이름 정보를 담은 ApprovLineVO 객체
+	 * @return					결재선 정보
+	 */
+	List<ApprovLineVO> selectApprovLine(ApprovLineVO approvLineVo) throws Exception;
+
+	/**
+	 * 사용자가 설정한 결재선을 db에 저장하는 메서드
+	 * @param approvLineListVo		사용자가 설정한 결재선 정보
+	 * @return						추가된 로우 카운트
+	 * @throws Exception
+	 */
+	int insertApprovLine(ApprovLineListVO approvLineListVo) throws Exception;
+	
+}

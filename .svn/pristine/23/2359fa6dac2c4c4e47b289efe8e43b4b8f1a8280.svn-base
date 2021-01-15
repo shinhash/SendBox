@@ -1,0 +1,136 @@
+package kr.or.ddit.freeboard.vo;
+
+import java.sql.Date;
+
+public class FreeBoardVo {
+	
+	private int post_seq;			//게시글번호(PK)			
+	private String emp_id;			//작성자(FK)
+	private String title;			//제목
+	private String cont;			//내용
+	private Date reg_dt;			//등록일자	
+	private Date upd_dt;			//수정일자
+	
+	public FreeBoardVo() {
+	}
+
+	public FreeBoardVo(int post_seq, String emp_id, String title, String cont, Date reg_dt, Date upd_dt) {
+		this.post_seq = post_seq;
+		this.emp_id = emp_id;
+		this.title = title;
+		this.cont = cont;
+		this.reg_dt = reg_dt;
+		this.upd_dt = upd_dt;
+	}
+
+	public int getPost_seq() {
+		return post_seq;
+	}
+
+	public void setPost_seq(int post_seq) {
+		this.post_seq = post_seq;
+	}
+
+	public String getEmp_id() {
+		return emp_id;
+	}
+
+	public void setEmp_id(String emp_id) {
+		this.emp_id = emp_id;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getCont() {
+		return cont;
+	}
+
+	public void setCont(String cont) {
+		this.cont = cont;
+	}
+
+	public Date getReg_dt() {
+		return reg_dt;
+	}
+
+	public void setReg_dt(Date reg_dt) {
+		this.reg_dt = reg_dt;
+	}
+
+	public Date getUpd_dt() {
+		return upd_dt;
+	}
+
+	public void setUpd_dt(Date upd_dt) {
+		this.upd_dt = upd_dt;
+	}
+
+	@Override
+	public String toString() {
+		return "FreeBoardVo [post_seq=" + post_seq + ", emp_id=" + emp_id + ", title=" + title + ", cont=" + cont
+				+ ", reg_dt=" + reg_dt + ", upd_dt=" + upd_dt + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((cont == null) ? 0 : cont.hashCode());
+		result = prime * result + ((emp_id == null) ? 0 : emp_id.hashCode());
+		result = prime * result + post_seq;
+		result = prime * result + ((reg_dt == null) ? 0 : reg_dt.hashCode());
+		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		result = prime * result + ((upd_dt == null) ? 0 : upd_dt.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		FreeBoardVo other = (FreeBoardVo) obj;
+		if (cont == null) {
+			if (other.cont != null)
+				return false;
+		} else if (!cont.equals(other.cont))
+			return false;
+		if (emp_id == null) {
+			if (other.emp_id != null)
+				return false;
+		} else if (!emp_id.equals(other.emp_id))
+			return false;
+		if (post_seq != other.post_seq)
+			return false;
+		if (reg_dt == null) {
+			if (other.reg_dt != null)
+				return false;
+		} else if (!reg_dt.equals(other.reg_dt))
+			return false;
+		if (title == null) {
+			if (other.title != null)
+				return false;
+		} else if (!title.equals(other.title))
+			return false;
+		if (upd_dt == null) {
+			if (other.upd_dt != null)
+				return false;
+		} else if (!upd_dt.equals(other.upd_dt))
+			return false;
+		return true;
+	}
+	
+	
+	
+	
+
+}

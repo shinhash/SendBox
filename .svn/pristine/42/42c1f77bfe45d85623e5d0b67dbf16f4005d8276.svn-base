@@ -1,0 +1,291 @@
+ <%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%> 
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<style>
+	a{
+		color: #858796;
+	}
+	.card{
+	float: left;
+	position:relative; 
+	
+	
+	}
+	#td1{
+	padding: 10px;
+	margin: 10%;
+	vertical-align: top;
+	}
+	#tab{
+		width: 100%;
+		
+	}
+
+</style>
+
+</head>
+<body>
+<!-- <img src="/images/back.png" style=" width: 50%; text-align: center; float: right; margin-top: 20px;margin-left: 20px;"> -->
+<table id="tab">
+	<tr>
+		<td id="td1">
+			<div class="card shadow md-3" style="width: 100%;">
+			<div class="card-header py-3">
+			<i class="fas fa-fw fa-user-lock" style="font-size: 20px; "></i>
+				<h6 style="width: 100px; display: inline;" class="m-0 font-weight-bold text-default" >내 정보</h6>
+				<a id="more" href="/mypage" style="color: gray;  "><h6 style="float: right; " class="m-0 font-weight-bold text-default">더보기</h6></a>
+			</div>
+	
+			<div class="card-body" style="  height: 20%">
+				<div class="table-responsive">
+					<table class="table" id="dataTable" width="100%"
+						cellspacing="0">
+						<tbody>
+						<tr><td rowspan="5"><img id="men" src="${pageContext.request.contextPath}/profileImgView?empId=${EMP.empId}" style="border-radius: 70%; width:120px; height:150px; overflow: hidden; margin-left: 10%; margin-top: 5%; "></td></tr>
+							<tr>
+								<td>이름</td>
+								<td>${EMP.empNm}</td>
+							</tr>
+							<tr>
+								<td>아이디</td>
+								<td>${EMP.empId}</td>
+							</tr>
+							<tr>
+								<td>부서</td>
+								<td>
+	                                <c:if test="${emp.deptId==0000 }">사장님</c:if>
+	                                <c:if test="${emp.deptId==0001 }">SI</c:if>
+	                                <c:if test="${emp.deptId==0002 }">인사팀</c:if>
+	                                <c:if test="${emp.deptId==0003 }">SI 1팀</c:if>
+	                                <c:if test="${emp.deptId==0004 }">SI 2팀</c:if>
+	                                <c:if test="${emp.deptId==0005 }">SM 1팀</c:if>
+	                                <c:if test="${emp.deptId==0006 }">인사 1팀</c:if>
+	                                <c:if test="${emp.deptId==0007 }">인사 2팀</c:if>
+	                               </td>
+							</tr>
+							<tr>
+								<td>직급</td>
+								<td><c:choose>
+									<c:when test="${emp.jobtitleId == 0 }"> 사원</c:when>
+									<c:when test="${emp.jobtitleId == 1 }"> 대리</c:when>
+									<c:when test="${emp.jobtitleId == 2 }"> 팀장</c:when>
+									<c:when test="${emp.jobtitleId == 3 }"> 부장</c:when>
+									<c:when test="${emp.jobtitleId == 4 }"> CEO</c:when>
+								</c:choose></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		</td>
+		<td id="td1">
+		<div class="card shadow md-3" style="width: 100%;">
+		<div class="card-header py-3">
+		<i class="fas fa-fw fa-bullhorn" style="font-size: 20px; "></i>
+			<h6 style="width: 100px; display: inline;" class="m-0 font-weight-bold text-default" >공지사항</h6>
+			<a id="more" href="/notice" style="color: gray;  "><h6 style="float: right; " class="m-0 font-weight-bold text-default">더보기</h6></a>
+		</div>
+
+		<div class="card-body" style="  height: 20%">
+			<div class="table-responsive">
+				<table class="table" id="dataTable" width="100%"
+					cellspacing="0">
+					<tbody>
+					<c:forEach items="${NoticeList }" var="notice">
+                          <c:if test="${notice.noticeSt == 'Y' }">
+ 	                             <tr >
+ 	                             <td></td>
+                                <td><a href="/noticeDetail?noticeSeq=${notice.noticeSeq }">${notice.title }</a></td>
+                                <td>
+								<fmt:formatDate value="${notice.updDt }" pattern="yyyy-MM-dd"/>
+								</td>
+                              </tr>
+                           </c:if>
+                     </c:forEach>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+		</td>
+		
+		<td id="td1">
+		
+		<div class="card shadow md-3" style="width: 100%;">
+		<div class="card-header py-3">
+		<i class="far fa-file-alt" style="font-size: 20px; "></i>
+			<h6 style="width: 100px; display: inline;" class="m-0 font-weight-bold text-default" >결재 진행함</h6>
+			<a id="more" href="/reporting" style="color: gray;  "><h6 style="float: right; " class="m-0 font-weight-bold text-default">더보기</h6></a>
+		</div>
+
+		<div class="card-body" style="  height: 20%">
+			<div class="table-responsive">
+				<table class="table" id="dataTable" width="100%"
+					cellspacing="0">
+					<tbody>
+					<c:forEach items="${reportList }" var="list">
+                          <c:if test="${notice.noticeSt == 'Y' }">
+								<tr>
+									<td>${list.title }</td>
+									<td>${list.reportDt }</td>
+									<td>
+										<c:choose>
+											<c:when test="${list.typeId =='type1'}">기안서</c:when>
+											<c:when test="${list.typeId =='type2'}">휴가</c:when>
+											<c:when test="${list.typeId =='type3'}">월차/반차</c:when>
+											<c:when test="${list.typeId =='type4'}">사직서</c:when>
+										</c:choose>
+									</td>
+									<td>
+										<c:choose>
+											<c:when test="${list.reportSt =='W'}">대기</c:when>
+											<c:when test="${list.reportSt =='Y'}">승인</c:when>
+											<c:when test="${list.reportSt =='ing'}">진행</c:when>
+											<c:when test="${list.reportSt =='N'}">거절</c:when>
+											<c:otherwise>퇴사</c:otherwise>
+										</c:choose>
+									</td>
+								</tr>
+							</c:if>
+                     </c:forEach>
+                     <c:if test="${fn:length(reportList) == 0 }">
+                          <tr>
+                             <td colspan="4" style="text-align: center;">진행중인 서류가 없습니다.</td>
+                          </tr>
+                       </c:if>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+		</td>
+		
+	</tr>
+	
+	
+	<tr>
+			<td id="td1">
+				<div class="card shadow md-3" style="width: 100%;">
+					<div class="card-header py-3">
+						<i class="fas fa-envelope-open" style="font-size: 20px;"></i>
+						<!-- 		<h5 style=" font-size: 1.5em; display: inline;">✉ </h5> -->
+						<h6 style="width: 100px; display: inline; font-weight: bold;"
+							class="m-0 font-weight-bold text-default">메일함</h6>
+						<a id="more" href="/mail/list" style="color: gray;"><h6
+								style="float: right;" class="m-0 font-weight-bold text-default">더보기</h6></a>
+					</div>
+
+					<div class="card-body" style="height: 20%">
+						<div class="table-responsive">
+							<table class="table" id="dataTable" width="100%" cellspacing="0">
+								<tbody>
+									<c:forEach items="${MailList }" begin="0" end="3" var="mail">
+										<tr>
+											<td><a href="/mail/detail?mailSeq=${mail.mailSeq}">${mail.title}</a></td>
+											<td>${mail.sender}</td>
+										</tr>
+									</c:forEach>
+									<c:if test="${fn:length(MailList) == 0 }">
+										<tr>
+											<td colspan="4" style="text-align: center;">받은 메일이 없습니다.</td>
+										</tr>
+									</c:if>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
+			</td>
+			<td id="td1">
+				<div class="card shadow md-3" style="width: 100%;">
+					<div class="card-header py-3">
+						<i class="fas fa-fw fa-clock" style="font-size: 20px;"></i>
+						<h6 style="width: 100px; display: inline;"
+							class="m-0 font-weight-bold text-default">이번주 근태</h6>
+						<a id="more" href="/attend" style="color: gray;"><h6
+								style="float: right;" class="m-0 font-weight-bold text-default">더보기</h6></a>
+					</div>
+
+					<div class="card-body" style="height: 20%">
+						<div class="table-responsive">
+							<table class="table" id="dataTable" width="100%" cellspacing="0">
+								<tbody>
+									<tr>
+										<td>이번주 근태 그래프 최은서 넣으셈</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
+			</td>
+			<td id="td1">
+			<div class="card shadow md-3" style="width: 100%;">
+					<div class="card-header py-3">
+						<i class="fas fa-fw fa-clock" style="font-size: 20px;"></i>
+						<h6 style="width: 100px; display: inline;"
+							class="m-0 font-weight-bold text-default">연차 내역</h6>
+						<a id="more" href="/attend" style="color: gray;"><h6
+								style="float: right;" class="m-0 font-weight-bold text-default">더보기</h6></a>
+					</div>
+
+					<div class="card-body" style="height: 20%">
+						<div class="table-responsive">
+							<table class="table" id="dataTable" width="100%" cellspacing="0">
+								<tbody>
+									<tr>
+										<td>신하승 그래프 넣으셈</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			
+			</td>
+	
+	</tr>
+
+</table>
+
+	
+	
+	
+	
+		
+	
+	
+
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+</body>
+</html>

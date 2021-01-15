@@ -1,0 +1,29 @@
+package kr.or.ddit.vacation.vo;
+
+public class VacatTypeVO {
+
+	private int vacateTypeSeq;
+	private String vacateTypeCode;
+	private String vacateTypeName;
+	
+	
+	public void setVacateTypeCode(String vacateTypeCode) {
+		this.vacateTypeCode = vacateTypeCode; 
+	}
+	public String getVacateTypeCode() {
+		return vacateTypeCode; 
+	}
+	public void setVacateTypeName(String vacateTypeName) {
+		this.vacateTypeName = vacateTypeName; 
+	}
+	public String getVacateTypeName() {
+		return vacateTypeName; 
+	}
+	public void setVacateTypeSeq(int vacateTypeSeq) {
+		this.vacateTypeSeq = vacateTypeSeq; 
+	}
+	public int getVacateTypeSeq() {
+		return vacateTypeSeq; 
+	}
+
+}

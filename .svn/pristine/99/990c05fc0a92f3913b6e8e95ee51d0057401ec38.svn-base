@@ -1,0 +1,134 @@
+<%@page import="java.util.ArrayList"%>
+<%@page import="kr.or.ddit.business.schedule.vo.ScheduleVO"%>
+<%@page import="java.util.List"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+	<%List<ScheduleVO> list = (ArrayList<ScheduleVO>)request.getAttribute("showSchedule"); %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+<title>풀캘린더</title>
+<style type="text/css">
+
+@font-face {
+    font-family: 'IBMPlexSansKR-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-07@1.0/IBMPlexSansKR-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+  font-family: 'LotteMartHappy';
+  font-style: normal;
+  font-weight: 400;
+  src: url('//cdn.jsdelivr.net/korean-webfonts/1/corps/lottemart/LotteMartHappy/LotteMartHappyMedium.woff2') format('woff2'), url('//cdn.jsdelivr.net/korean-webfonts/1/corps/lottemart/LotteMartHappy/LotteMartHappyMedium.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'Jal_Onuel';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10-21@1.0/Jal_Onuel.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+
+.add-button {
+	position: absolute;
+	top: 1px;
+	right: 230px;
+	background: #2C3E50;
+	border: 0;
+	color: white;
+	height: 35px;
+	border-radius: 3px;
+	width: 157px;
+	
+}
+
+#calendar{
+	font-family: 'Jal_Onuel';
+}
+
+.fc-day-number{
+	color : black;
+	
+}
+
+</style>
+<link href='/packages/core/main.css' rel='stylesheet' />
+<link href='/packages/daygrid/main.css' rel='stylesheet' />
+<link href='/packages/timegrid/main.min.css' rel='stylesheet' />
+<script src='/packages/core/main.js'></script>
+<script src='/packages/daygrid/main.js'></script>
+<script src="/packages/interaction/main.min.js"></script>
+<script src="/packages/timegrid/main.min.js"></script>
+<script>
+
+	function click_add() {
+		var url = "/schedulePopup";
+		var name = "schedulePopup";
+		var option = "width = 500, height = 500 left = 100, top=50,location=no";
+		window.open(url, name, option)
+	};
+
+
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() { 
+	var calendarEl = document.getElementById('calendar'); 
+	var calendar = new FullCalendar.Calendar(calendarEl, 
+			{plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'list' ],
+		header: {left: 'prev,next today',
+			center: 'title',
+			right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'},
+			locale : "ko",
+			navLinks: true, // can click day/week names to navigate views
+			businessHours: true, // display business hours
+			editable: false,
+			events: [ 
+				<% if(list != null){
+					for (int i = 0; i < list.size(); i++) {
+ 					ScheduleVO vo = (ScheduleVO)list.get(i); %> 
+					{
+						title : '<%= vo.getContent() %>',
+						start : '<%= vo.getStartDt()%>',
+						end : '<%= vo.getEndDt() %>',
+						id : '<%= vo.getSchedId() %>',
+						color : "#6CBCF1"
+						}, 
+						<%}
+				} %>
+						{
+							title : 'default',
+							start : "2019-01-01",
+							end : "2019-01-01"
+							}
+						]
+			, eventClick:function(info) {
+//                     alert(info.event.id +"\n"+info.event.title + "\n" + info.event.start +"\n" +info.event.end );
+                    var id = info.event.id 
+                    var url = "/selectSchedule?id="+id;
+            		var name = "select";
+            		var option = "width = 600, height = 600 left = 100, top=50,location=no";
+            		window.open(url, name, option)
+                    
+                    
+                }
+
+			});
+
+	calendar.render(); 
+}); 
+
+</script>
+
+<body>
+	<div id='calendar' style="width: 56%;height: 70%; margin-left: 20%; margin-top:3%;">
+			<button class="add-button" type="button" onclick="click_add();" style="margin-top: 6.3%;">일정 추가</button>
+	</div>
+</body>
+</html>
+

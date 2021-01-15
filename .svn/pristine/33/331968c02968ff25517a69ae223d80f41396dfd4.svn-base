@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.business.meeting.dao.MeetingMapperDao">
+
+<select id="getMeeting" resultType="kr.or.ddit.business.meeting.vo.MeetingVO">
+SELECT
+    reserv_seq,
+    meetroom_id,
+    dept_id,
+    reserv_start_dt,
+    reserv_end_dt,
+    gubun
+FROM
+    mt_rm_res
+</select>
+
+<insert id="addMeeting" parameterType="kr.or.ddit.business.meeting.vo.MeetingVO">
+INSERT INTO mt_rm_res (
+    reserv_seq,
+    meetroom_id,
+    dept_id,
+    reserv_start_dt,
+    reserv_end_dt,
+    gubun
+) VALUES (
+    RESERV_SEQ.nextval,
+    #{meetroomId},
+    #{deptId},
+    TO_DATE(#{reservStartDt},'YYYY-MM-DD HH24'),
+    TO_DATE(#{reservEndDt},'YYYY-MM-DD HH24'),
+    'Y'
+)
+</insert>
+
+	
+	
+</mapper>

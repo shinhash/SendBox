@@ -1,0 +1,111 @@
+package kr.or.ddit.business.meeting.controller;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import kr.or.ddit.business.meeting.service.MeetingService;
+import kr.or.ddit.business.meeting.vo.MeetingVO;
+import kr.or.ddit.emp.vo.EmpVO;
+
+@Controller
+public class MeetingController {
+	private static final Logger logger = LoggerFactory.getLogger(MeetingController.class);
+
+	@Resource(name = "meetingService")
+	MeetingService meetingService;
+
+	@RequestMapping("/meeting")
+	public String getMeeting(Model model) {
+		List<MeetingVO> list = null;
+		try {
+			list = meetingService.getMeeting();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		model.addAttribute("showSchedule", list);
+
+		return "tiles/meeting/meeting";
+	}
+	
+	@RequestMapping("/meeting/meetSchedulePopup")
+	public String schedulePopupView() {
+
+		return "meeting/meetSchedulePopup";
+	}
+	
+	@RequestMapping(value = "/addMeeting", method = RequestMethod.POST)
+	public String addSchedule(String scheduleData, HttpSession session){
+		scheduleData = scheduleData.replaceAll("\\{", "");
+		scheduleData = scheduleData.replaceAll("\\}", "");
+		scheduleData = scheduleData.replaceAll("\"", "");
+		logger.debug("!!!!!!!!!!!!!!!!!!!!!!addMeeting : {} ",scheduleData);
+		
+		
+		String[] arr1 = scheduleData.split(",");
+		MeetingVO vo = new MeetingVO();
+		for(int i=0; i<arr1.length; i++) {
+	         String[] arr2 = arr1[i].split(":");
+	         
+	         if(i == 0) {
+	            vo.setMeetroomId(arr2[1]);
+	         } else if (i == 1) {
+	            vo.setReservStartDt(arr2[1]);
+	         } else if (i == 2) {
+	            String start = vo.getReservStartDt();
+	            start += " " + arr2[1];
+	            vo.setReservStartDt(start);
+	         } else if ( i==3 ) {
+	            vo.setReservEndDt(arr2[1]);
+	         } else if (i ==4) {
+	            String end = vo.getReservEndDt();
+	            end += " " + arr2[1];
+	            vo.setReservEndDt(end);
+	         }
+	      }
+		EmpVO empVo = (EmpVO) session.getAttribute("EMP");
+		vo.setDeptId(empVo.getDeptId());
+		try {
+			meetingService.addMeeting(vo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "jsonView";
+	}
+	
+	@RequestMapping("/selectMeeting")
+	public String deleteMeeting(String id,MeetingVO vo, HttpSession session,Model model) {
+		vo.setReservSeq(id);
+		MeetingVO vo2 = null;
+		try {
+			vo2 = meetingService.selectMeeting(vo);
+			logger.debug("meetingService스케줄 : {}", vo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		model.addAttribute("selectMeeting", vo2);
+		
+		return "meeting/selectMeeting";
+	}
+	
+	@RequestMapping("/deleteMeeting")
+	public String deleteMeeting(MeetingVO vo,HttpSession session) {
+		logger.debug("deleteSchedule스케줄 : {}", vo);
+		try {
+			meetingService.deleteMeeting(vo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return "jsonView";
+	}
+
+}

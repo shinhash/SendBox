@@ -1,0 +1,276 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>내 연차</title>
+
+    <!-- Custom styles for this page -->
+    <link href="/admin2form/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+	
+	<!-- Bootstrap core JavaScript-->
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+	
+	
+	<!-- Custom fonts for this template -->
+    <link href="/admin2form/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+          rel="stylesheet">
+	
+
+<script>
+   
+    
+</script>
+<style>
+	
+	.note-editable{
+		height: 350px;
+	}
+	.vl {
+	  float : left;
+	  text-align: center;
+	}
+	#d1{
+	  border-left: 2px solid gray;
+	}
+	
+	.front{
+		text-align: center;
+		font-family: 'Nanum Gothic', sans-serif;
+		width: 200px;
+	}
+		
+	table {
+	    width: 100%;
+	    border-top: 3px solid #858796;
+	    border-collapse: collapse;
+  	}
+  	th, td {
+	    border-bottom: 1px solid #858796;
+	    padding: 10px;
+  	}
+  	
+  	th{
+  		background: lightblue;
+  	}
+  	
+  	
+  	
+  	
+  	
+  	.myvacateInfo{
+   		font-weight: bold;
+   		text-align: center;
+   	}
+   	#myVacateInfoTable .myvacateInfo{
+   		font-size: 20px;
+   	}
+   	.myvacateInfo.UDT{
+   		color: blue;
+   	}
+   	.myvacateInfo.NUDT{
+   		color: green;
+   	}
+   	
+   	
+   	
+   	
+   	.myvacateInfo.number{
+  		width: 10%;
+  	}
+  	.myvacateInfo.name{
+  		width: 25%;
+  	}
+  	.myvacateInfo.useCnt{
+  		width: 15%;
+  		color: blue;
+  	}
+  	.myvacateInfo.useChck{
+  		width: 15%;
+  	}
+  	.myvacateInfo.vacateMenu{
+  		width: 35%;
+  		text-align: left;
+  	}
+  	
+
+
+
+  	.myvacateInfo.gubun{
+  		width: 10%;
+  	}
+  	.myvacateInfo.lestDt{
+  		width: 25%;
+  	}
+  	.myvacateInfo.lestCnt{
+  		width: 15%;
+  		color: blue;
+  	}
+  	.myvacateInfo.lestChck{
+  		width: 15%;
+  	}
+  	.myvacateInfo.lestReason{
+  		width: 35%;
+  		text-align: left;
+  	}
+  	.myVacateBtn{
+  		margin-top: 5px;
+  	}
+</style>
+
+<script type="text/javascript">
+	$(function(){
+		
+		showCnt = 0;
+		$("#myVacateInfoListTable").hide();
+		
+		$("#showMyVacateLog").on("click", function(){
+			if(showCnt % 2 == 0){
+				$("#myVacateInfoListTable").show();
+				window.scrollTo(0,document.body.scrollHeight);
+			}else{
+				$("#myVacateInfoListTable").hide();
+			}
+			showCnt++;
+		});
+		
+		
+		$("#reportInsertVacate").on("click", function(){
+			
+		});
+		
+	});
+</script>
+
+
+
+
+
+</head>
+
+<body id="page-top">
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Begin Page Content -->
+                <div class="container-fluid"  style="max-width: 80%;">
+                    <!-- Page Heading -->
+                    <h2 class="h3 mb-2 text-gray-800" style="display: inline;"><i class="far fa-calendar-alt" style="margin-left: 10px; "></i>&nbsp&nbsp 내 연차 </h2>
+                    <hr>
+                    <table style="width:100%;" id="vacateKindsInfoTable" border="1">
+                    	<tr>
+                    		<th class="front">번호</th>
+                    		<th class="front">휴가명</th>
+                    		<th class="front">연차차감</th>
+                    		<th class="front">사용여부</th>
+                    		<th class="front">휴가설명</th>
+                    	</tr>
+                    	<tbody>
+                    	<!-- 휴가종류 -->
+                    	<c:forEach var="i" begin="0" end="${vacatTypeList.size()-1}" step="1">
+                    		<tr>
+	                    		<td class="front myvacateInfo number">${i+1}</td>
+	                    		<td class="front myvacateInfo name">${vacatTypeList.get(i).vacateTypeName }</td>
+	                    		<td class="front myvacateInfo useCnt">${myVacateTypeList.get(i) }</td>
+	                    		<td class="front myvacateInfo useChck">O</td>
+	                    		<td class="front myvacateInfo vacateMenu">${vacatTypeList.get(i).vacateTypeManual }</td>
+                    		</tr>
+                    	</c:forEach>
+                    	</tbody>
+					</table>
+				 	<br><br>
+					 
+				 	<hr>
+				 	<table style="width:100%;" id="myVacateInfoTable" border="1">
+                    	<tr>
+                    		<th class="front">년도</th>
+                    		<th class="front">연차 할당일</th>
+                    		<th class="front">연차 사용일</th>
+                    		<th class="front">연차 잔여일</th>
+                    	</tr>
+                    	
+                    	<!-- 휴가내역 -->
+                    	<jsp:useBean id="now" class="java.util.Date" />
+						<fmt:formatDate value="${now }" pattern="yyyy" var="date"/>
+                    	<tr>
+                    		<td class="front myvacateInfo">${date }년</td>
+                    		<td class="front myvacateInfo">${myVacateDayCnt }일</td>
+                    		<td class="front myvacateInfo UDT">
+                    			${myVacateUseCnt }일
+                    			<br>
+                    			<button type="button" id="showMyVacateLog" class="btn btn-info myVacateBtn">사용내역조회</button>
+                    		</td>
+                    		<td class="front myvacateInfo NUDT">
+                    			${myVacateDayCnt - myVacateUseCnt}일
+                    			<br>
+                    			<button type="button" id="reportInsertVacate" class="btn btn-info myVacateBtn">휴가신청</button>
+                    		</td>
+                    	</tr>
+					</table>
+					 	
+					<br>
+					
+					
+					<div id="myVacateInfoListDiv">
+						<table style="width:100%;" id="myVacateInfoListTable" border="1">
+	                    	<tr>
+	                    		<th class="front">구분</th>
+	                    		<th class="front">휴가기간</th>
+	                    		<th class="front">휴가일수</th>
+	                    		<th class="front">전자결재</th>
+	                    		<th class="front">휴가사유</th>
+	                    	</tr>
+	                    	<c:if test="${empVacateList.size() > 0}">
+		                    	<c:forEach var="i" begin="0" end="${empVacateList.size()-1}" step="1">
+		                    		<tr>
+			                    		<td class="front myvacateInfo gubun">${empVacateList.get(i).vacateTypeName}</td>
+			                    		<td class="front myvacateInfo lestDt">${empVacateList.get(i).vacateStartDt } ~ ${empVacateList.get(i).vacateEndDt }</td>
+			                    		<td class="front myvacateInfo lestCnt">${empVacateList.get(i).vacateCnt }</td>
+			                    		<td class="front myvacateInfo lestChck">승인</td>
+			                    		<td class="front myvacateInfo lestReason">${empVacateList.get(i).vacateReason }</td>
+		                    		</tr>
+		                    	</c:forEach>
+	                    	</c:if>
+	                    	<c:if test="${empVacateList.size() == 0}">
+	                    		<tr>
+	                    			<td colspan="6" class="front myvacateInfo useChck">휴가를 사용한 기록이 없습니다.</td>
+	                    		</tr>
+	                    	</c:if>
+						</table>
+					</div>
+				
+				<!-- End summernote -->
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+            
+            
+            	
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    
+</body>

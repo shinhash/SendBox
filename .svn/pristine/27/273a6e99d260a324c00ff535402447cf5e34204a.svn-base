@@ -1,0 +1,20 @@
+package kr.or.ddit.report.vo;
+
+import java.util.List;
+
+import kr.or.ddit.comm.vo.BaseVO;
+
+public class ApprovLineListVO extends BaseVO {
+	
+	private List<ApprovLineVO> approvLineList;
+
+	public List<ApprovLineVO> getApprovLineList() {
+		return approvLineList;
+	}
+
+	public void setApprovLineList(List<ApprovLineVO> approvLineList) {
+		this.approvLineList = approvLineList;
+	}
+	
+	
+}

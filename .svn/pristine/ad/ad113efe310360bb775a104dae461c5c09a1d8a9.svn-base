@@ -1,0 +1,60 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<script src="node_modules/blueimp-file-upload/js/jquery.fileupload.js"></script>
+</head>
+<script>
+	$(document).ready(function() {
+		$('.btn-upload').on('click', function (){
+			if (confirm('Want to upload a image or a video file?')) {
+				var data = new FormData();
+				data.append("file", $('#file').prop('files')[0]);				
+				console.log(data);
+				$.ajax({
+		            type: "POST",
+		            enctype: 'multipart/form-data',
+		            url: "/fileUpload",
+		            data: data,
+		            processData: false,
+		            contentType: false,
+		            cache: false,
+		            timeout: 600000,
+		            success: function (result) {
+		                console.log("SUCCESS : ", result.data.url);
+		                $('#objectUrl').attr("disabled", true) 
+		                $('#objectUrl').val(result.data.url)
+		            },
+		            error: function (e) {
+		                console.log("ERROR : ", e);
+		            }
+		        });
+			}
+    	});
+</script>
+
+	
+<body>
+
+	<div class="form-group">
+		<label for="objectUrl" class="col-xs-2 control-label"><span
+			class="fa fa-fw fa-bars"></span>이미지/동영상 업로드</label>
+		<div class="col-xs-10">
+			<input type="text" class="form-control" id="objectUrl"
+				name="objectUrl" value=""><br />
+			<label><input type="file" name="file" id="file"
+				accept="image/*,video/*" /></label>
+			<button type="button" class="btn btn-danger btn-upload">file
+				upload</button>
+		</div>
+	</div>
+
+
+
+
+
+</body>
+</html>

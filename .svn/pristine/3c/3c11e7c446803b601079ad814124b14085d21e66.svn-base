@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.alarm.dao.AlarmMapperDao">
+
+
+
+
+	<select id="selectEmpIdList" parameterType="String" resultType="String">
+		SELECT EMP_ID
+		FROM EMP
+		WHERE EMP_ID in (SELECT EMP_ID
+		                 FROM CHAT_INFO
+		                 WHERE CHATRM_ID = #{chatRoomId})
+	</select>
+	
+	
+	
+	
+	
+	<select id="selectAlarmInfoList" parameterType="String" resultType="kr.or.ddit.alarm.vo.AlarmVO">
+		SELECT alarm_seq,
+			   emp_id,
+			   alarm_sender,
+			   alarm_cont,
+			   alarm_link_cont,
+			   alarm_st
+		FROM ALARM
+		WHERE EMP_ID = #{empId}
+		AND ALARM_ST = 'Y'
+		ORDER BY alarm_dt desc
+	</select>
+	
+	
+	
+	
+	
+
+	<insert id="insertAlarm" parameterType="kr.or.ddit.alarm.vo.AlarmVO">
+		INSERT INTO alarm (alarm_seq,
+						   emp_id,
+						   alarm_sender,
+						   alarm_cont,
+						   alarm_st) 
+			VALUES (ALARM_SEQ.nextval,
+					#{empId},
+					#{alarmSender},
+					#{alarmCont},
+					'Y')
+	</insert>
+
+
+
+
+
+</mapper>

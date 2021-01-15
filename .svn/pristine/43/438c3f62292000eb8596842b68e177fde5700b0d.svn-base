@@ -1,0 +1,124 @@
+package kr.or.ddit.salary.controller;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import kr.or.ddit.salary.service.SalaryService;
+import kr.or.ddit.salary.vo.SalaryReVO;
+import kr.or.ddit.salary.vo.SalaryVO;
+
+@Controller
+public class SalaryController {
+	
+	@Resource
+	SalaryService salaryService;
+	
+	private static final Logger logger = LoggerFactory.getLogger(SalaryController.class);
+	
+	@RequestMapping("/salary/manage")
+	public String salaryManage(Model model, String year, String month) {
+		
+		logger.debug("월급 볼 년/달 : {},{}",year,month);
+		Date nowDate = new Date();
+		SimpleDateFormat yy = new SimpleDateFormat("yyyy");
+		SimpleDateFormat mm = new SimpleDateFormat("MM");
+		
+		if(year == null || year.equals("")) {
+			year = yy.format(nowDate);
+		}
+		
+		if(month == null || month.equals("")) {
+			month = mm.format(nowDate);
+		}
+		
+		logger.debug("월급 볼 년/달 2222222222222 : {},{}",year,month);
+		
+		model.addAttribute("yy",yy.format(nowDate));
+		model.addAttribute("mm",mm.format(nowDate));
+		
+		SalaryVO inputVO = new SalaryVO();
+		inputVO.setSalaryDt(year + "-" + month);
+		
+		List<SalaryReVO> salaryList = null;
+		
+		try {
+			salaryList = salaryService.selectMonList(inputVO);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("리스트 개수 ?????????????????????? {}",salaryList.size());
+		
+		model.addAttribute("salaryList",salaryList);
+		
+		return "tiles/salary/salaryManage";
+	}
+	
+	@RequestMapping("/salary/calculation")
+	public String caculation(String year, String month) {
+		logger.debug("월급 산정할 년/달  : {},{}",year,month);
+		
+		List<String> empList = new ArrayList<String>();
+		
+		String calMon = year + "-" + month;
+		
+		try {
+			empList = salaryService.selectAllId();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		for(int i=0;i<empList.size();i++) {
+			
+			Map<String, String> map = new HashMap<String, String>();
+
+			// i번째 사원의 정보 map에 넣어서 월급 가져오기
+			map.put("empId", empList.get(i));
+			map.put("month", calMon);
+			String salary = "";
+			try {
+				salary = salaryService.getMonthSalary(map);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			SalaryVO salVO = new SalaryVO();
+			salVO.setEmpId(empList.get(i));
+			salVO.setSalaryAmt(salary);
+			
+			logger.debug("salaryVO ???? {}",salVO);
+			try {
+				salaryService.salaryCal(salVO);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return "";
+	}
+	
+	
+	@RequestMapping("/salary/test")
+	public String salaryTest(Model model) {
+		
+		Date nowDate = new Date();
+		SimpleDateFormat yy = new SimpleDateFormat("yyyy");
+		SimpleDateFormat mm = new SimpleDateFormat("MM");
+		model.addAttribute("yy",yy.format(nowDate));
+		model.addAttribute("mm",mm.format(nowDate));
+		
+		return "salary/test";
+	}
+	
+}

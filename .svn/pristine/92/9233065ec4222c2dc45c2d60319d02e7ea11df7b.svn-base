@@ -1,0 +1,270 @@
+package kr.or.ddit.business.busiboard.controller;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.ws.rs.CookieParam;
+
+import org.apache.commons.collections4.iterators.ArrayListIterator;
+import org.apache.poi.hssf.record.aggregates.RecordAggregate.PositionTrackingVisitor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
+
+import kr.or.ddit.business.busiboard.service.BusiBoardService;
+import kr.or.ddit.business.busiboard.vo.BusiBoardVO;
+import kr.or.ddit.business.busiboard.vo.BusiFileVO;
+import kr.or.ddit.business.busiboard.vo.BusiPostVO;
+import kr.or.ddit.business.busiboard.vo.BusiRepleVO;
+import kr.or.ddit.comm.util.FileUtils;
+import kr.or.ddit.comm.vo.PaginationVO;
+
+@Controller
+public class BusiBoardController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(BusiBoardController.class);
+	
+	@Resource
+	private BusiBoardService busiBoardService;
+	
+	//접속한 사원의 부서 게시판을 가져옴
+	
+	//left.jsp
+	@RequestMapping(path="/selectBoard")
+	public String selectBoard(BusiBoardVO busiBoardVo, Model model) {
+		List<BusiBoardVO> busiBoardList = null;
+		try {
+			busiBoardList = busiBoardService.selectBusiBoardList(busiBoardVo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		model.addAttribute("busiBoardList", busiBoardList);
+		return "jsonView";
+	}
+	//left.jsp
+	
+	
+	//left.jsp
+	@RequestMapping("/selectPostList")
+	public String selectPostList(BusiPostVO busiPostVo, Model model,
+								 @CookieValue(value="recordCountPerPage", required=false) Cookie cntCookie,
+								 @CookieValue(value="searchCondition", required=false) Cookie searchConditionCookie,
+								 @CookieValue(value="searchKey", required=false) Cookie searchKeywordCookie) {
+		
+		/* 게시글 리스트를 가져와서 페이지에 표시 	*/
+		
+		if(cntCookie != null) {
+			String recordCnt = cntCookie.getValue();
+			busiPostVo.setRecordCountPerPage(Integer.parseInt(recordCnt));
+		}
+		
+		if(searchConditionCookie != null) {
+			String searchCondition = searchConditionCookie.getValue();
+			busiPostVo.setSearchCondition(searchCondition);
+		}
+		if(searchKeywordCookie != null) {
+			String searchKeyword = searchKeywordCookie.getValue();
+			busiPostVo.setSearchKeyword(searchKeyword);
+		}
+		
+		logger.debug("busiPostVo 정보 좀 보자: {}", busiPostVo);
+		//logger.debug("cntCookie : {}", Integer.parseInt(cntCookie.getValue()));
+		List<BusiPostVO> busiPostList = null;
+		BusiBoardVO busiBoardVo = new BusiBoardVO("", "", busiPostVo.getBoardId());
+		int cnt = 1;
+		try {
+			busiPostList = busiBoardService.selectBusiPostList(busiPostVo);
+			busiBoardVo = busiBoardService.selectBusiBoard(busiBoardVo);
+			cnt = busiBoardService.selectBusiPostTotCnt(busiPostVo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		PaginationVO pagination = new PaginationVO(busiPostVo.getPageIndex(), 
+													busiPostVo.getRecordCountPerPage(), 
+													busiPostVo.getPageSize(), 
+													cnt);
+		
+		model.addAttribute("pagination", pagination);
+		model.addAttribute("busiPost", busiPostVo);
+		model.addAttribute("busiBoard", busiBoardVo);
+		model.addAttribute("busiPostList", busiPostList);
+		return "tiles/business/postListView";
+	}
+	//postListView.jsp
+	
+	//postListView.jsp
+	@RequestMapping("/insertPostView")
+	public String insertPostView(BusiPostVO busiPostVo, Model model) {
+		logger.debug("아이디좀 보자! : {}", busiPostVo);
+		/* 글 작성 화면 표시 */
+		model.addAttribute("busiPost", busiPostVo);
+		return "tiles/business/insertPost";
+	}
+	//insertPost.jsp
+	
+	//insertPost.jsp
+	@RequestMapping(path="/insertPost", method= {RequestMethod.POST})
+	public String insertPost(BusiPostVO busiPostVo, Model model,
+			@RequestPart("realfilename") MultipartFile[] files) {
+		/* 작성한 글 정보와 첨부파일을 받아 db에 등록 후 목록화면으로 이동 */
+		logger.debug("글을 보자 : {}", busiPostVo);
+		
+		List<BusiFileVO> busiFileList = FileUtils.createFileList(files);
+		Map<String, Object> busiPostMap = new HashMap<String, Object>();
+		busiPostMap.put("busiPost", busiPostVo);
+		busiPostMap.put("busiFileList", busiFileList);
+		int cnt = 0;
+		try {
+			cnt = busiBoardService.insertBusiPost(busiPostMap);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(files.length == cnt) {
+			return "redirect:selectPostList?boardId="+busiPostVo.getBoardId();
+		}
+		
+		return "redirect:selectPostList?boardId="+busiPostVo.getBoardId();
+		
+	}
+	///selectPostList?boardId=
+	
+	//postListView.jsp
+	@RequestMapping("/selectPost")
+	public String  selectPost(BusiPostVO busiPostVo, Model model) {
+		/* 게시글의 아이디를 입력받아 게시글을 vo에 담아 페이지에 표시 */
+		
+		logger.debug("게시글 아이디 갖고왔니? : {}", busiPostVo.getPostSeq());
+		Map<String, Object> postMap = null;
+		try {
+			postMap = busiBoardService.selectBusiPostContent(busiPostVo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		model.addAttribute("busiPostMap", postMap);
+		return "tiles/business/postView";
+	}
+	//postView.jsp
+	
+	//postView.jsp
+	@RequestMapping("/updatePostView")
+	public String updatePostView(BusiPostVO busiPostVo, Model model) {
+		Map<String, Object> busiPostMap = null;
+		try {
+			busiPostMap = busiBoardService.selectBusiPostContent(busiPostVo);
+			model.addAttribute("busiPostMap", busiPostMap);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	
+		return "tiles/business/updatePostView";
+	}
+	//updatePostView.jsp
+	
+	//updatePostView.jsp
+	@RequestMapping("/updatePost")
+	public String updatePost(BusiPostVO busiPostVo, @RequestPart("realfilename") MultipartFile[] files, String delListString) {
+		
+		Map<String, Object> postMap = new HashMap<>();
+		postMap.put("busiPost", busiPostVo);
+		
+		List<BusiFileVO> busiFileList = FileUtils.createFileList(files);
+		postMap.put("busiFileList", busiFileList);
+		List<BusiFileVO> delFileList = new ArrayList<>();
+		String[] delFileArr = delListString.split(" ");
+		
+		for(String delFileString : delFileArr) {
+			delFileList.add(new BusiFileVO(Integer.parseInt(delFileString), 0, "", "", "N"));
+		}
+		
+		postMap.put("delFileList", delFileList);
+		
+		try {
+			busiBoardService.updateBusiPost(postMap);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		/* 수정된 게시글 정보를 입력받아 게시글을 db에 업데이트
+		 * 추가된 파일은 insert
+		 * 기존 파일 중 삭제할 파일은 delete
+		 */
+		
+		return "redirect:/selectPost?postSeq="+busiPostVo.getPostSeq();
+	}
+	///selectPost?postId=
+	
+	//postView.jsp
+	@RequestMapping("/deletePost")
+	public String deletePost(BusiPostVO busiPostVo) {
+		
+		busiPostVo.setPostSt("N");
+		try {
+			busiBoardService.deleteBusiPost(busiPostVo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		/*
+		 * 삭제할 게시글의 아이디를 받아 글의 활성화 상태를 비활성화로 전환
+		 * 파일에 대해서는 아무 작업도 없음.
+		 */
+		
+		return "redirect:/selectPostList?boardId="+busiPostVo.getBoardId();
+	}
+	///selectPostList?boardId=
+	
+	//postView.jsp
+	@RequestMapping("/postFileDownload")
+	public String postFileDownload(BusiFileVO busiFileVo, Model model) {
+		BusiFileVO busiFile = null;
+		try {
+			busiFile = busiBoardService.selectBusiFile(busiFileVo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		model.addAttribute("busiFile", busiFile);
+		return "fileDownloadView";
+	}
+	//downloadView
+	
+	@RequestMapping("/insertBusiReple")
+	public String insertBusiReple(BusiRepleVO busiRepleVo, Model model) {
+		String cont = busiRepleVo.getRepleCont();
+		String newCont = cont.replaceAll("\r\n", "<br>");
+		busiRepleVo.setRepleCont(newCont);
+		
+		try {
+			busiBoardService.insertBusiReple(busiRepleVo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "redirect:selectPost?postSeq="+busiRepleVo.getPostSeq();
+	}
+	
+	@RequestMapping("/deleteBusiReple")
+	public String deleteBusiReple(BusiRepleVO busiRepleVo) {
+		logger.debug("삭제하는 놈 누구냐? : {}", busiRepleVo);
+		busiRepleVo.setRepleSt("N");
+		try {
+			busiBoardService.deleteBusiReple(busiRepleVo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "redirect:/selectPost?postSeq="+busiRepleVo.getPostSeq();
+	}
+	
+}

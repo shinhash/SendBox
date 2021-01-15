@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.business.library.dao.LibMapperDao">
+
+<select id="libList" parameterType="kr.or.ddit.business.library.vo.LibVO" resultType="kr.or.ddit.business.library.vo.LibVO">
+	SELECT fileT.file_seq, fileT.file_real_nm, fileT.file_path, fileT.file_icon_id, fileT.emp_id, fileT.file_size, fileT.LIBRARY_ID,
+	        iconT.FILE_ICON_PATH, iconT.file_type
+	FROM (SELECT *
+	      FROM lib_file) fileT,    
+	     (SELECT *
+	      FROM file_icon) iconT
+	WHERE fileT.FILE_ICON_ID = iconT.FILE_ICON_ID
+	AND fileT.FILE_ST = 'Y'
+	<if test="libraryId!=null">
+		AND fileT.library_id = #{libraryId }
+	</if>
+</select>
+
+
+</mapper>

@@ -1,0 +1,70 @@
+package kr.or.ddit.business.library.vo;
+
+import kr.or.ddit.comm.vo.BaseVO;
+
+public class LibraryVO extends BaseVO{
+
+	private String fileRealNm;
+	private String libraryId;
+	private String filePath;
+	private String fileIconId;
+	private String fileSeq;
+	
+	private String empId;
+	private String deptId;
+	private String libraryNm;
+	
+	
+	
+	
+	
+	public String getLibraryNm() {
+		return libraryNm;
+	}
+	public void setLibraryNm(String libraryNm) {
+		this.libraryNm = libraryNm;
+	}
+	public String getEmpId() {
+		return empId;
+	}
+	public void setEmpId(String empId) {
+		this.empId = empId;
+	}
+	public String getDeptId() {
+		return deptId;
+	}
+	public void setDeptId(String deptId) {
+		this.deptId = deptId;
+	}
+	public void setFileRealNm(String fileRealNm) {
+		this.fileRealNm = fileRealNm; 
+	}
+	public String getFileRealNm() {
+		return fileRealNm; 
+	}
+	public void setLibraryId(String libraryId) {
+		this.libraryId = libraryId; 
+	}
+	public String getLibraryId() {
+		return libraryId; 
+	}
+	public void setFilePath(String filePath) {
+		this.filePath = filePath; 
+	}
+	public String getFilePath() {
+		return filePath; 
+	}
+	public void setFileIconId(String fileIconId) {
+		this.fileIconId = fileIconId; 
+	}
+	public String getFileIconId() {
+		return fileIconId; 
+	}
+	public void setFileSeq(String fileSeq) {
+		this.fileSeq = fileSeq; 
+	}
+	public String getFileSeq() {
+		return fileSeq; 
+	}
+
+}

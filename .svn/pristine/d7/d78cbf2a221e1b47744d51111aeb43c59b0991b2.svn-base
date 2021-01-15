@@ -1,0 +1,156 @@
+package kr.or.ddit.report.controller;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import kr.or.ddit.comm.vo.PaginationVO;
+import kr.or.ddit.emp.vo.EmpVO;
+import kr.or.ddit.report.service.ReportService;
+import kr.or.ddit.report.vo.ReportTypeVO;
+import kr.or.ddit.report.vo.ReportVO;
+
+@Controller
+public class ReportController {
+	
+	@Resource(name="reportService")
+	ReportService reportService;
+	
+	private static final Logger logger = LoggerFactory.getLogger(ReportController.class);
+	
+	
+	@RequestMapping("/report/insertReportView")
+	public String insertReportView(Model model) {
+		/* 기안문 작성화면(양식선택 화면)으로 포워딩, 양식 리스트를 갖고 가야함. */
+		try {
+			List<ReportTypeVO> reportTypeList = reportService.selectReportTypeList();
+			model.addAttribute("reportTypeList", reportTypeList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "tiles/report/insertReportView";
+	}
+	
+	
+	
+	
+	
+	
+	
+	@RequestMapping("/reportWait")
+	public String reportView(Model model,ReportVO reportVo, HttpSession session) {
+		
+		EmpVO empVO = (EmpVO) session.getAttribute("EMP");
+		logger.debug("empVO.getEmpId() : {}" , empVO.getEmpId());
+		reportVo.setEmpId(empVO.getEmpId());
+		reportVo.setReportSt("W");
+		reportVo.setPageSize(5);
+		
+		int cnt = 1;
+		List<ReportVO> reportList = null;
+		try {
+			reportList = reportService.getRepostList(reportVo);
+			cnt = reportService.selectReportTotCnt(reportVo);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		PaginationVO pagination = new PaginationVO(reportVo.getPageIndex(),
+				reportVo.getRecordCountPerPage(), reportVo.getPageSize(), cnt);
+		
+		model.addAttribute("pagination", pagination);
+		model.addAttribute("reportList",reportList);
+		
+		return "tiles/report/reportWait";
+	}
+	
+	@RequestMapping("/reporting")
+	public String reportingView(Model model,ReportVO reportVo, HttpSession session) {
+		
+		EmpVO empVO = (EmpVO) session.getAttribute("EMP");
+		logger.debug("empVO.getEmpId() : {}" , empVO.getEmpId());
+		reportVo.setEmpId(empVO.getEmpId());
+		reportVo.setReportSt("ing");
+		reportVo.setPageSize(5);
+		
+		int cnt = 1;
+		List<ReportVO> reportList = null;
+		try {
+			reportList = reportService.getRepostList(reportVo);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		PaginationVO pagination = new PaginationVO(reportVo.getPageIndex(),
+				reportVo.getRecordCountPerPage(), reportVo.getPageSize(), cnt);
+		
+		model.addAttribute("pagination", pagination);
+		model.addAttribute("reportList",reportList);
+		
+		return "tiles/report/reporting";
+	}
+	
+	@RequestMapping("/reportSuccess")
+	public String reportSuccessView(Model model,ReportVO reportVo, HttpSession session) {
+		
+		EmpVO empVO = (EmpVO) session.getAttribute("EMP");
+		logger.debug("empVO.getEmpId() : {}" , empVO.getEmpId());
+		reportVo.setEmpId(empVO.getEmpId());
+		reportVo.setReportSt("Y");
+		reportVo.setPageSize(5);
+		
+		List<ReportVO> reportList = null;
+		int cnt = 1;
+		try {
+			reportList = reportService.getRepostList(reportVo);
+			cnt = reportService.selectReportTotCnt(reportVo);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		PaginationVO pagination = new PaginationVO(reportVo.getPageIndex(),
+				reportVo.getRecordCountPerPage(), reportVo.getPageSize(), cnt);
+		
+		model.addAttribute("pagination", pagination);
+		model.addAttribute("reportList",reportList);
+		
+		return "tiles/report/reportSuccess";
+	}
+	
+	
+	@RequestMapping("/reportFail")
+	public String reportFailView(Model model,ReportVO reportVo, HttpSession session) {
+		
+		EmpVO empVO = (EmpVO) session.getAttribute("EMP");
+		logger.debug("empVO.getEmpId() : {}" , empVO.getEmpId());
+		reportVo.setEmpId(empVO.getEmpId());
+		reportVo.setReportSt("N");
+		reportVo.setPageSize(5);
+		
+		int cnt = 1;
+		List<ReportVO> reportList = null;
+		try {
+			reportList = reportService.getRepostList(reportVo);
+			cnt = reportService.selectReportTotCnt(reportVo);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		PaginationVO pagination = new PaginationVO(reportVo.getPageIndex(),
+				reportVo.getRecordCountPerPage(), reportVo.getPageSize(), cnt);
+		
+		model.addAttribute("pagination", pagination);
+		model.addAttribute("reportList",reportList);
+		
+		return "tiles/report/reportFail"; 
+	}
+	
+
+}

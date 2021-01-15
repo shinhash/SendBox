@@ -1,0 +1,17 @@
+package kr.or.ddit.business.library.dao;
+
+import egovframework.rte.psl.dataaccess.mapper.Mapper;
+import kr.or.ddit.business.library.vo.LibraryVO;
+
+@Mapper("librayMapperDao")
+public interface LibrayMapperDao {
+	
+	/**
+	 * 사용자에 따른 자료실 검색
+	 * @param libraryVO
+	 * @return LibraryVO
+	 * @throws Exception
+	 */
+	LibraryVO deptIdSelect(LibraryVO libraryVO) throws Exception;
+	
+}

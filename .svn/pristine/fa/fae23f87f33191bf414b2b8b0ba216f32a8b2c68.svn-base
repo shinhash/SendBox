@@ -1,0 +1,231 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>투표 게시글 생성</title>
+
+    <!-- Custom styles for this page -->
+    <link href="/admin2form/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+	
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+	
+    
+<script>
+    $(document).ready(function() {
+    	
+        $("#votePostInsertBtn").on("click", function(){
+        	
+        	voteItemTF = true;
+        	voteStartDtTF = true;
+        	
+        	// 투표 제목 확인
+        	if($("#title").val() == ""){
+        		alert("투표 제목을 작성해주세요.");
+        	}
+        	
+        	// 투표 항목 확인
+        	var voteItemLen = $(".voteItemAddedInfo").length;
+        	for(var i=0; i<voteItemLen; i++){
+        		var text = $(".voteItemAddedInfo:eq("+i+")").find(".voteItemClass").val();
+				if(text == ""){
+					voteItemTF = false;
+					alert("투표항목을 작성해주세요.");
+	        		break;
+				}
+        	}
+        	
+        	// 투표 날짜 확인
+        	var startDT = $("#votePostSD").val();
+        	var endDT = $("#votePostED").val();
+        	if(startDT == ""){
+        		voteItemTF = false;
+        		alert("투표 시작 날짜를 선택해주세요");
+        	}
+        	if(endDT == ""){
+        		voteItemTF = false;
+        		alert("투표 종료 날짜를 선택해주세요");
+        	}
+        	if(startDT > endDT){
+        		voteItemTF = false;
+        		alert("투표 시작날짜는 종료날짜보다 앞에 있어야 합니다.");
+        		$("#votePostSD").val("");
+        		$("#votePostED").val("");
+        	}
+        	
+        	
+        	if(voteItemTF == true){
+        		$("#votePostInsertForm").submit();
+        	}
+        });
+        
+        $("#backBtn").on("click", function(){
+        	document.location = "/vote/votePostListView";
+        });
+        
+        
+        // 항목 추가 버튼 클릭 함수
+        $("#voteItemAddBtn").on("click", function(){
+        	var tagInfo = "";
+        	tagInfo += "<div class='voteItemAddedInfo'>";
+        	tagInfo += "	● <input type='text' name='voteItemInfo' class='voteItemClass' />";
+        	tagInfo += "	<button type='button' class='btn btn-danger voteItemSubBtn'>￣</button>";
+        	tagInfo += "</div>";
+        	$("#voteItemDiv").append(tagInfo);
+        });
+        
+        
+        // 항목 제거 버튼 클릭 함수
+        $("#voteItemDiv").on("click", ".voteItemSubBtn", function(){
+        	$(this).parents(".voteItemAddedInfo").remove();
+        });
+    });
+</script>
+<style>
+	
+	.note-editable{
+		height: 350px;
+	}
+	.vl {
+	  float : left;
+	  text-align: center;
+	}
+	#d1{
+	  border-left: 2px solid gray;
+	}
+	
+	.front{
+		text-align: center;
+		font-family: 'Nanum Gothic', sans-serif;
+	}
+		
+	table {
+	    width: 100%;
+	    border-top: 3px solid #858796;
+	    border-collapse: collapse;
+  	}
+  	.trBottomLine th, .trBottomLine td {
+	    border-bottom: 1px solid #858796;
+	    padding: 10px;
+  	}
+  	.trVoteAddLine td{
+  		padding: 10px;
+  	}
+  	.in {
+  		background: rgba(0, 0, 0, 0.2);
+  	}
+	.voteItemClass{
+		width: 300px;
+	}
+	#voteItemAddBtn{
+		height: 30px;
+  		vertical-align: top;
+  		width: 30px;
+  		padding-top: 0px;
+  		padding-left: 0px;
+  		padding-right: 0px;
+	}
+	.voteItemSubBtn{
+		height: 30px;
+  		font-size: 20px;
+  		vertical-align: top;
+  		width: 30px;
+  		padding-left: 0px;
+  		padding-right: 0px;
+	}
+	.voteItemAddedInfo{
+		margin-top: 5px;
+		margin-left: 10%;
+	}
+		
+</style>
+</head>
+
+
+<jsp:useBean id="now" class="java.util.Date" />
+<fmt:formatDate value="${now }" pattern="yyyy-MM-dd" var="date"/>
+
+<body id="page-top">
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Begin Page Content -->
+                <div class="container-fluid" style="max-width: 90%;">
+                    <!-- Page Heading -->
+                    <h2 class="h3 mb-2 text-gray-800" style="display: inline;"><i class="fas fa-pen-alt" style="margin-left: 10px;"></i>&nbsp&nbsp 투표 생성</h2>
+                    <span style="margin-left: 10px; font-size: 0.9em;">*투표를 생성합니다.</span>
+                    <hr>
+                    <br>
+                    <!-- votePostInfo -->
+					<form id="votePostInsertForm" action="/vote/createVotePost" method="post">
+						<input type="hidden" name="vPCToken" value="vPCToken" />
+	                    <table  width="100%" cellspacing="0">
+	                    	<tr class="trBottomLine">
+	                    		<td class="front">투표 제목</td>
+	                    		<td><input type="text" id="title" name="votePostTitle" autofocus maxlength="30" minlength="1" style="margin-left: 10px; width: 90%;"></td>
+	                    	</tr>
+							<tr class="trBottomLine">
+	                    		<td class="front">투표 내용 </td>
+								<td><textarea id="cont" name="votePostCont" cols="50" rows="3" style="font-size: 12px; margin-left: 10px; width: 90%; resize: none;"></textarea></td>
+							</tr>
+							<tr class="trVoteAddLine">
+	                    		<td class="front">투표 항목</td>
+								<td id="voteItemCountBtnTD">
+									<button type="button" class="btn btn-info" id="voteItemAddBtn">╉</button>
+								</td>
+							</tr>
+							<tr class="trBottomLine">
+								<td colspan="2">
+									<div id="voteItemDiv" style="margin-left: 0%;">
+										<div class="voteItemAddedInfo">
+											● <input type="text" name="voteItemInfo" class="voteItemClass" />
+										</div>
+									</div>
+								</td>
+							</tr>
+							<tr class="trBottomLine">
+	                    		<td class="front">투표 시작 일자</td>
+								<td><input id="votePostSD" type="date" min="${date }" name="votePostStartDt"/></td>
+							</tr>
+							<tr class="trBottomLine">
+	                    		<td class="front">투표 종료 일자</td>
+								<td><input id="votePostED" type="date" min="${date }" name="votePostEndDt"/></td>
+							</tr>
+						</table>
+						
+					 	<br>
+					 	<input type="button" id="votePostInsertBtn" class="btn btn-success" value="등록" style="display:inline; float: right;">
+					 	<input type="reset" id="resetter" class="btn btn-warning" value="초기화" style="display:inline; float: right; margin-right: 10px;">
+					 	<input id="backBtn" type="button" class="btn " value="목록" style="display:inline;margin-right : 10px; float: left; background: #104467; color: white;">
+					</form>
+				<!-- End votePostInfo -->
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    
+</body>

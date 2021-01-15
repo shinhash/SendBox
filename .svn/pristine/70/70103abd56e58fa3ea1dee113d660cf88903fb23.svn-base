@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.business.schedule.dao.ScheduleMapperDao">
+
+<select id="getSchedule" parameterType="kr.or.ddit.business.schedule.vo.ScheduleVO" resultType="kr.or.ddit.business.schedule.vo.ScheduleVO">
+	SELECT
+	    sched_id,
+	    dept_id,
+	    content,
+	    start_dt,
+	    end_dt
+<!-- 	    to_char(start_dt,'YY/MM/DD HH24:MI') as start_dt, -->
+<!-- 	    to_char(end_dt,'YY/MM/DD HH24:MI') as end_dt -->
+	FROM
+	    dept_sched
+	    where dept_id = #{deptId}
+</select>
+
+<insert id="addSchedule" parameterType="kr.or.ddit.business.schedule.vo.ScheduleVO">
+INSERT INTO dept_sched (
+    sched_id,
+    dept_id,
+    content,
+    start_dt,
+    end_dt
+) VALUES (
+    SCHED_SEQ.nextval,
+    #{deptId},
+    #{content},
+    TO_DATE(#{startDt},'YYYY-MM-DD HH24'),
+    TO_DATE(#{endDt},'YYYY-MM-DD HH24')
+)
+</insert>
+	
+	
+</mapper>

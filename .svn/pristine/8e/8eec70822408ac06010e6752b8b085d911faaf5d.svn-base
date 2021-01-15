@@ -1,0 +1,73 @@
+package kr.or.ddit.vacation.vo;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class VacationVO {
+
+	private int vacatSeq;
+	private String empId;
+	private Date vacatStartDt;
+	private Date vacatEndDt;
+	private int vacateCnt;
+	private String vacatGubun;
+	
+	
+	public void setVacatSeq(int vacatSeq) {
+		this.vacatSeq = vacatSeq; 
+	}
+	public int getVacatSeq() {
+		return vacatSeq; 
+	}
+	
+	
+	
+	public void setEmpId(String empId) {
+		this.empId = empId; 
+	}
+	public String getEmpId() {
+		return empId; 
+	}
+	
+	
+	
+	
+	
+	public void setVacatStartDt(Date vacatStartDt) {
+		this.vacatStartDt = vacatStartDt; 
+	}
+	public String getVacatStartDt() {
+		if(vacatStartDt != null) {
+			return new SimpleDateFormat("yyyy-MM-dd").format(vacatStartDt);
+		}else {
+			return "";
+		}
+	}
+	
+	
+	
+	public void setVacatEndDt(Date vacatEndDt) {
+		this.vacatEndDt = vacatEndDt; 
+	}
+	public String getVacatEndDt() {
+		if(vacatEndDt != null) {
+			return new SimpleDateFormat("yyyy-MM-dd").format(vacatEndDt);
+		}else {
+			return "";
+		}
+	}
+	
+	
+	
+	
+	public void setVacateCnt(int vacateCnt) {
+		this.vacateCnt = vacateCnt; 
+	}
+	public int getVacateCnt() {
+		return vacateCnt; 
+	}
+	
+	
+	
+
+}

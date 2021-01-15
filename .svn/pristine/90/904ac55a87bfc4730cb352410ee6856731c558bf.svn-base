@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.vacation.dao.VacationMapperDao">
+
+
+	<select id="selectEmpVacateInfo" parameterType="kr.or.ddit.vacation.vo.VacationVO" resultType="kr.or.ddit.vacation.vo.VacationVO">
+		SELECT VACAT_SEQ, 
+			   EMP_ID, 
+		       VACAT_START_DT, 
+		       VACAT_END_DT, 
+		       (VACAT_END_DT-VACAT_START_DT) as vacate_cnt
+		FROM VACATION
+		WHERE EMP_ID = #{empId}
+		AND TO_CHAR(VACAT_END_DT, 'YYYY') = TO_CHAR(sysdate, 'YYYY')
+		<![CDATA[AND VACAT_END_DT < SYSDATE]]>
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	<select id="selectvacatTypeList" parameterType="kr.or.ddit.vacation.vo.VacatTypeVO" resultType="kr.or.ddit.vacation.vo.VacatTypeVO">
+		SELECT vacate_type_seq,
+			   vacate_type_code,
+			   vacate_type_name
+		FROM vacate_type
+	</select>
+	
+	
+	
+	
+	
+	
+	<select id="selectMyVacateCnt" parameterType="kr.or.ddit.vacation.vo.VacationVO" resultType="int">
+		SELECT (VACAT_END_DT-VACAT_START_DT)
+		FROM vacation
+		WHERE vacate_type_seq = #{vacateTypeSeq}
+		AND emp_id = #{empId}
+	</select>
+
+
+
+
+
+	<select id="selectEmpJobTitleVacateDayCnt" parameterType="kr.or.ddit.emp.vo.EmpVO" resultType="int">
+		SELECT job_vacate_day
+		FROM job_vacate
+		WHERE jobtitle_id = (SELECT jobtitle_id 
+		                     FROM emp 
+		                     WHERE emp_id = #{empId})
+	</select>
+
+
+
+
+
+</mapper>

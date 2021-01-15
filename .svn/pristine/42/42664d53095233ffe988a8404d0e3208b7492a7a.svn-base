@@ -1,0 +1,80 @@
+package kr.or.ddit.address.controller;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import kr.or.ddit.address.service.AddrService;
+import kr.or.ddit.address.vo.AddrEmpVO;
+import kr.or.ddit.comm.vo.PaginationVO;
+import kr.or.ddit.notice.controller.NoticeController;
+
+@Controller
+public class AddrController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(NoticeController.class);
+	
+	@Resource(name = "addrService")
+	AddrService addrService;
+	
+	@RequestMapping("/address")
+	public String addressView(Model model,AddrEmpVO addrEmpVO) {
+		addrEmpVO.setRecordCountPerPage(10);
+		addrEmpVO.setPageSize(5);
+		int cnt = 0;
+		
+		try {
+			List<AddrEmpVO> empList = addrService.retrieveAddressList(addrEmpVO);
+			cnt = addrService.addrCount(addrEmpVO);
+			model.addAttribute("empList", empList);
+			int addrCnt = addrService.addrCount(addrEmpVO);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		PaginationVO pagination = new PaginationVO(addrEmpVO.getPageIndex(), 
+												addrEmpVO.getRecordCountPerPage(), 
+												addrEmpVO.getPageSize(), 
+												cnt);
+		model.addAttribute("pagination", pagination);
+		
+		logger.debug("addressEmpVO2 : {}", addrEmpVO);
+		return "tiles/address/address";
+	}
+	
+	@RequestMapping("/empSearch")
+	public String empSearch(Model model,AddrEmpVO addrEmpVO){
+		addrEmpVO.setRecordCountPerPage(addrEmpVO.getRecordCountPerPage());
+		addrEmpVO.setPageSize(5);
+		int cnt = 0;
+		
+		try {
+			List<AddrEmpVO> empList = addrService.retrieveAddressList(addrEmpVO);
+			cnt = addrService.selectCount(addrEmpVO); 
+			logger.debug("cnt : {}", cnt);
+			model.addAttribute("empList", empList);
+			int addrCnt = addrService.addrCount(addrEmpVO);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		PaginationVO pagination = new PaginationVO(addrEmpVO.getPageIndex(), 
+												addrEmpVO.getRecordCountPerPage(), 
+												addrEmpVO.getPageSize(), 
+												cnt);
+		model.addAttribute("pagination", pagination);
+		logger.debug("addressEmpVO2 : {}", addrEmpVO);
+		
+		return "address/addressAjax";
+	}
+
+}

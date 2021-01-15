@@ -1,0 +1,22 @@
+package kr.or.ddit.business.library.service;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.business.library.dao.LibMapperDao;
+import kr.or.ddit.business.library.vo.LibVO;
+
+@Service("libService")
+public class LibService{
+	
+	@Resource(name="libMapperDao")
+	private LibMapperDao libMapperDao;
+	
+	// 조회
+	public List<LibVO> libList(LibVO libVO) throws Exception{
+		return libMapperDao.libList(libVO);
+	}
+}

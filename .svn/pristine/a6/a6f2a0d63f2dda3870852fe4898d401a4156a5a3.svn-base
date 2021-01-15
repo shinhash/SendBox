@@ -1,0 +1,61 @@
+package kr.or.ddit.business.library.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class LibraryController {
+	
+//	@Resource
+//	private LibraryServiceI libraryService;
+	
+	
+	@RequestMapping("/selectLib")
+	public String selectLib(String dept_id, Model model) {
+		/* 부서 자료실 파일 목록을 가져와서 화면에 표시*/
+		//libraryService.selectLib(dept_id);
+		/*LibraryVo library = new LibraryVo("1", "dept001", "인사자료실");
+		model.addAttribute("library", library);*/
+		return "jsonView";
+	}
+	
+	@RequestMapping("/insertLib")
+	public String insertLib() {
+		/* 부서 자료실에 파일을 업로드 */
+		return "";
+	}
+	
+	@RequestMapping("/updateLib")
+	public String updateLib() {
+		/* 부서 자료실 파일의 이름을 변경 */
+		return "";
+		
+	}
+	
+	@RequestMapping("/deleteLib")
+	public String deleteLib() {
+		/* 부서 자료실 파일을 삭제 */
+		return "";
+	}
+	
+	@RequestMapping("/copyLib")
+	public String copyLib() {
+		/*부서 자료실의 파일을 복사(같은 파일을 하나 더 만들어서 이름만 copy를 앞에 붙임. db 저장) */
+		return "";
+	}
+	
+	@RequestMapping("/moveLib")
+	public String moveLib() {
+		/* 부서 자료실의 파일을 이동(경로명 수정) */
+		return "";
+	}
+	
+	@RequestMapping("/downloadFile")
+	public String downloadFile() {
+		/* 부서 자료실의 파일을 다운로드 */
+		return "";
+	}
+	
+	
+}

@@ -1,0 +1,132 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<style>
+	.document-editor__toolbar{
+		width : 800px;
+	}
+	.editor{
+		width : 800px;
+		height : 800px;
+	
+	}
+	
+	.writer{
+		border : 1px solid gray;
+		width : 800px;
+		
+	
+	}
+
+
+
+</style>
+
+
+</head>
+
+
+
+
+
+
+<body>
+	<h2>기안문 작성</h2>
+	<hr>
+	<div class="writer">
+		<div class="document-editor__toolbar"></div>
+		<div class="editor">
+			
+		</div>
+	<div style="float : right;">
+	<button type="button" id="insertReport">작성완료</button><button type="button" id="calcel">작성취소</button>
+	</div>
+	</div>
+	<script src="/ckeditor5/build/ckeditor.js"></script>
+	<script>DecoupledDocumentEditor
+			.create( document.querySelector( '.editor' ), {
+				
+				toolbar: {
+					items: [
+						'exportPdf',
+						'exportWord',
+						'CKFinder',
+						'pageBreak',
+						'heading',
+						'|',
+						'fontSize',
+						'fontFamily',
+						'|',
+						'bold',
+						'italic',
+						'underline',
+						'strikethrough',
+						'highlight',
+						'fontColor',
+						'fontBackgroundColor',
+						'specialCharacters',
+						'|',
+						'alignment',
+						'|',
+						'numberedList',
+						'bulletedList',
+						'|',
+						'indent',
+						'outdent',
+						'|',
+						'horizontalLine',
+						'code',
+						'codeBlock',
+						'htmlEmbed',
+						'todoList',
+						'link',
+						'blockQuote',
+						'imageUpload',
+						'insertTable',
+						'|',
+						'undo',
+						'redo'
+					]
+				},
+				language: 'ko',
+				image: {
+					toolbar: [
+						'imageTextAlternative',
+						'imageStyle:full',
+						'imageStyle:side'
+					]
+				},
+				table: {
+					contentToolbar: [
+						'tableColumn',
+						'tableRow',
+						'mergeTableCells',
+						'tableCellProperties',
+						'tableProperties'
+					]
+				},
+				licenseKey: '',
+				
+			} )
+			.then( editor => {
+				window.editor = editor;
+		
+				
+				// Set a custom container for the toolbar.
+				document.querySelector( '.document-editor__toolbar' ).appendChild( editor.ui.view.toolbar.element );
+				document.querySelector( '.ck-toolbar' ).classList.add( 'ck-reset_all' );
+			} )
+			.catch( error => {
+				console.error( 'Oops, something went wrong!' );
+				console.error( 'Please, report the following error on https://github.com/ckeditor/ckeditor5/issues with the build id and the error stack trace:' );
+				console.warn( 'Build id: ywtaruz06pdl-6v1em39f6r66' );
+				console.error( error );
+			} );
+	</script>
+	
+</body>
+</html>

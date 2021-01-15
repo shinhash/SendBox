@@ -1,0 +1,78 @@
+ <%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%> 
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<style>
+	a{
+		color: #858796;
+	}
+	#content{
+		background-image: url('/images/back.png')
+	}
+
+</style>
+
+</head>
+<body>
+<!-- <img src="/images/back.png" style=" width: 50%; text-align: center; float: right; margin-top: 20px;margin-left: 20px;"> -->
+
+	<div class="card shadow mb-3" style="width: 50%;  margin: 3%; margin-top: 5%;">
+		<div class="card-header py-3">
+		<i class="fas fa-fw fa-bullhorn" style="font-size: 20px; "></i>
+			<h6 style="width: 100px; display: inline;" class="m-0 font-weight-bold text-default" >공지사항</h6>
+			<a id="more" href="/notice" style="color: gray;  "><h6 style="float: right; " class="m-0 font-weight-bold text-default">더보기</h6></a>
+		</div>
+
+
+		<div class="card-body" style=" text-align: center; height: 20%">
+			<div class="table-responsive">
+				<table class="table" id="dataTable" width="100%"
+					cellspacing="0">
+					<tbody>
+					<c:forEach items="${NoticeList }" var="notice">
+                          <c:if test="${notice.noticeSt == 'Y' }">
+ 	                             <tr>
+                                <td>${notice.noticeSeq }</td>
+                                <td><a href="/noticeDetail?noticeSeq=${notice.noticeSeq }">${notice.title }</a></td>
+                                <td>
+								<fmt:formatDate value="${notice.updDt }" pattern="yyyy-MM-dd"/>
+								</td>
+                              </tr>
+                           </c:if>
+                     </c:forEach>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	
+	
+	
+	<div class="card shadow mb-3" style="width: 50%;  margin: 3%">
+		<div class="card-header py-3" style="float: left;">
+		<i class="far fa-thumbs-up" style="font-size: 20px; "></i>
+			<h6 style="width: 100px; display: inline; " class="m-0 font-weight-bold text-default" >이달의 사원</h6>
+		</div>
+		<div class="card-body" style="margin: 1px;">
+			<div class="table-responsive">
+			<img src="/images/member3.png" style="width : 120px; height:150px; border-radius: 70%; overflow: hidden;  margin-left: 15%;" >
+			<img src="/images/member4.png" style="width : 120px; height:150px; border-radius: 70%; overflow: hidden; margin-left: 20%;" ><br>
+                    <span style="font-size: 1.2em; margin-left: 15%;">이진욱 팀장</span>
+                    <span style="font-size: 1.2em; margin-left: 25%;">이제훈 대리</span><br>
+                    <span style="font-size: 0.8em; margin-left: 20%" >개발팀</span>
+                    <span style="font-size: 0.8em;margin-left: 35%;" >인사팀</span>
+			</div>
+		</div>
+	</div>
+	
+
+
+
+
+</body>
+</html>

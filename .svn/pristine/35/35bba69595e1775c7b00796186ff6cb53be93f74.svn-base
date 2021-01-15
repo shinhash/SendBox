@@ -1,0 +1,15 @@
+package kr.or.ddit.facemeeting.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class FaceMeetingController {
+
+	@RequestMapping("/facemeetingView")
+	public String facemeetingView() {
+		/* 화상 회의 홈페이지 연결 */
+		return "";
+	}
+	
+}

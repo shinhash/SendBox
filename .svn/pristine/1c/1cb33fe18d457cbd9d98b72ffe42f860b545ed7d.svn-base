@@ -1,0 +1,90 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>CKEditor 5 – Document editor</title>
+    <script src="https://cdn.ckeditor.com/ckeditor5/23.1.0/decoupled-document/ckeditor.js"></script>
+     <link href="${pageContext.request.contextPath}/admin2form/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="${pageContext.request.contextPath}/admin2form/css/sb-admin-2.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap core JavaScript-->
+    <script src="${pageContext.request.contextPath}/admin2form/vendor/jquery/jquery.min.js"></script>
+    <script src="${pageContext.request.contextPath}/admin2form/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="${pageContext.request.contextPath}/admin2form/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="${pageContext.request.contextPath}/admin2form/js/sb-admin-2.min.js"></script>
+    
+    <style>
+    	div.dropdown{
+    	 border : 2px solid blue;
+    	 height : 100px;
+    	}
+    
+    </style>
+</head>
+<body>
+    <h1>Document editor</h1>
+
+    <!-- The toolbar will be rendered in this container. -->
+    <div id="toolbar-container"></div>
+
+    <!-- This container will become the editable. -->
+    <div id="editor">
+        <p>테스트글입니다.</p>
+    </div>
+
+    <script>
+        DecoupledEditor
+            .create( document.querySelector( '#editor' ), {
+            	
+            	toolbar : {
+            		items : ['exportPdf',
+            			     'exportWord',
+            			     ]
+            	},
+            	launguage : 'ko'
+            	
+            	
+            	
+            	
+            	
+            }  )
+            .then( editor => {
+                const toolbarContainer = document.querySelector( '#toolbar-container' );
+
+                toolbarContainer.appendChild( editor.ui.view.toolbar.element );
+            } )
+            .catch( error => {
+                console.error( error );
+            } );
+    </script>
+
+		
+		<div class="dropdown">
+		  <button id="dLabel" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+		    Dropdown trigger
+		  </button>
+		  <ul class="dropdown-menu" aria-labelledby="dLabel">
+		    ...
+		  </ul>
+		</div>    
+
+    
+    
+    
+    
+    
+    
+    
+</body>
+</html>

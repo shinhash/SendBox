@@ -1,0 +1,27 @@
+package kr.or.ddit.report.service;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.report.dao.ReportMapperDao;
+import kr.or.ddit.report.vo.ReportVO;
+
+@Service("reportService")
+public class ReportService {
+	
+	@Resource(name="reportMapperDao")
+	private ReportMapperDao reportMapperDao;
+
+	public List<ReportVO> getRepostList(ReportVO reportVo) throws Exception {
+		return reportMapperDao.getRepostList(reportVo);
+	}
+
+	public int selectReportTotCnt(ReportVO reportVo) throws Exception{
+		return reportMapperDao.selectReportTotCnt(reportVo);
+	}
+	
+
+}

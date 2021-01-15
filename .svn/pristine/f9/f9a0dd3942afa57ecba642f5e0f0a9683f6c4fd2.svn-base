@@ -1,0 +1,28 @@
+package kr.or.ddit.dept.service;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.dept.dao.DeptMapperDao;
+import kr.or.ddit.dept.vo.DeptVO;
+
+@Service("deptService")
+public class DeptService {
+
+	@Resource(name = "deptMapperDao")
+	private DeptMapperDao deptMapperDao;
+	
+	
+	
+	public List<DeptVO> selectDeptTreeList() {
+		List<DeptVO> deptTreeList = null;
+		try {
+			deptTreeList = deptMapperDao.selectDeptTreeList();
+		} catch (Exception e) { e.printStackTrace(); }
+		return deptTreeList;
+	}
+	
+}

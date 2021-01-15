@@ -1,0 +1,85 @@
+package kr.or.ddit.emp.vo;
+
+import kr.or.ddit.comm.vo.BaseVO;
+
+public class LeftItemVO extends BaseVO {
+	
+	private String empId;
+	private String approver;
+	private int waitCnt;
+	private int ingCnt;
+	private int completeCnt;
+	private int declineCnt;
+	private int approvCnt;
+	private int approvFinCnt;
+	private String openLeftId;
+	private String reportSt;
+	
+	public String getEmpId() {
+		return empId;
+	}
+	public void setEmpId(String empId) {
+		this.empId = empId;
+	}
+	public String getApprover() {
+		return approver;
+	}
+	public void setApprover(String approver) {
+		this.approver = approver;
+	}
+	public int getWaitCnt() {
+		return waitCnt;
+	}
+	public void setWaitCnt(int waitCnt) {
+		this.waitCnt = waitCnt;
+	}
+	public int getIngCnt() {
+		return ingCnt;
+	}
+	public void setIngCnt(int ingCnt) {
+		this.ingCnt = ingCnt;
+	}
+	public int getCompleteCnt() {
+		return completeCnt;
+	}
+	public void setCompleteCnt(int completeCnt) {
+		this.completeCnt = completeCnt;
+	}
+	public int getDeclineCnt() {
+		return declineCnt;
+	}
+	public void setDeclineCnt(int declineCnt) {
+		this.declineCnt = declineCnt;
+	}
+	public int getApprovCnt() {
+		return approvCnt;
+	}
+	public void setApprovCnt(int approvCnt) {
+		this.approvCnt = approvCnt;
+	}
+	public int getApprovFinCnt() {
+		return approvFinCnt;
+	}
+	public void setApprovFinCnt(int approvFinCnt) {
+		this.approvFinCnt = approvFinCnt;
+	}
+	public String getOpenLeftId() {
+		return openLeftId;
+	}
+	public void setOpenLeftId(String openLeftId) {
+		this.openLeftId = openLeftId;
+	}
+	public String getReportSt() {
+		return reportSt;
+	}
+	public void setReportSt(String reportSt) {
+		this.reportSt = reportSt;
+	}
+	
+	
+	
+	
+	
+	
+	
+}

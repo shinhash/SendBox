@@ -1,0 +1,128 @@
+package kr.or.ddit.attend.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.stringtemplate.v4.compiler.CodeGenerator.region_return;
+
+import kr.or.ddit.attend.service.AttendService;
+import kr.or.ddit.attend.view.ExcelDownloadView2;
+import kr.or.ddit.attend.vo.AttendVO;
+import kr.or.ddit.comm.vo.PaginationVO;
+import kr.or.ddit.emp.controller.EmpController;
+import kr.or.ddit.emp.vo.EmpVO;
+
+@Controller
+public class AttendController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(AttendController.class);
+	
+	@Resource(name="attendService")
+	AttendService attendService;
+	
+	@RequestMapping("/myattend")
+	public String myattendView(Model model,AttendVO attendVO) {
+		List<AttendVO> attendList = null;
+		try {
+			attendList = attendService.getAttendList(attendVO);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		model.addAttribute("attendList",attendList);
+		
+		return "tiles/attend/attend";
+	}
+	
+	
+//	  @RequestMapping("/excelDown")
+//	   public String excelDown(Model model, AttendVO attendVo) {
+//		List<AttendVO> attendList = null;
+//		try {
+//			attendList = attendService.getAttendList(attendVo);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	      // Model 객체에 header, data
+//	      List<String> header = new ArrayList<String>();
+//	      header.add("일자");
+//	      header.add("출근시간");
+//	      header.add("퇴근시간");
+//	      header.add("비고");
+//	      
+//	      List<Map<String, String>> data = new ArrayList<Map<String, String>>();
+//	      
+//	      for(int i=0;i<attendList.size();i++) {
+//	    	  Map<String, String> map = new HashMap<String, String>();
+//	    	  map.put("일자", attendList.get(i).getAttendDt());
+//	    	  map.put("출근시간", attendList.get(i).getWorkTime());
+//	    	  map.put("퇴근시간", attendList.get(i).getHomeTime());
+//	    	  map.put("비고", attendList.get(i).getRemark());
+//	    	  data.add(map);
+//	      }
+//	      model.addAttribute("header", header);
+//	      model.addAttribute("data", data);
+//	      return "excelView";
+//	   }
+	  
+	@RequestMapping("/excelDown")
+	public void listExcel(HttpServletRequest request, HttpServletResponse response, AttendVO attendVo, ModelMap modelMap)
+			throws Exception{
+
+		// 그냥 평소에 마이바티스에서 데이터 뽑는 방법으로 데이터를 가져온다.
+		List<AttendVO> dataList = attendService.getAttendList(attendVo);
+		logger.debug("dataList : {}",dataList);
+		// 받은 데이터를 맵에 담는다.
+		Map<String, Object> beans = new HashMap<String, Object>();
+		beans.put("dataList", dataList);
+		beans.put("name", attendVo.getEmpId());
+
+		// 엑셀 다운로드 메소드가 담겨 있는 객체
+		ExcelDownloadView2 me = new ExcelDownloadView2();
+
+		me.download(request, response, beans, attendVo.getEmpId() +"attend", "attend.xlsx", "무시해도됨");
+		
+	}
+	
+	@RequestMapping(value="/selectAttend", method=RequestMethod.POST)
+	public String selectAttend(Model model,String year, String month,HttpSession session) {
+		EmpVO empVo = (EmpVO) session.getAttribute("EMP");
+		String date = year+"/"+month;
+		logger.debug("date : {}",date);
+		AttendVO vo = new AttendVO();
+		vo.setAttendDt(date);
+		vo.setEmpId(empVo.getEmpId());
+		List<AttendVO> attendList = null;
+		logger.debug("getAttendDt : {}",vo.getAttendDt());
+		logger.debug("getEmpId : {}",vo.getEmpId());
+		try {
+			attendList = attendService.selectAttend(vo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		logger.debug("attendList : {}",attendList);
+		
+		model.addAttribute("attendList",attendList);
+		model.addAttribute("year",year);
+		model.addAttribute("month",month);
+		
+		return "tiles/attend/selectAttend";
+	}
+
+
+	
+}

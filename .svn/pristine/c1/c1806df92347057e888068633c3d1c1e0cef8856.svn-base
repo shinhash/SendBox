@@ -1,0 +1,48 @@
+package kr.or.ddit.salary.vo;
+
+public class SalaryReVO {
+
+	private String deptName;
+	private String empNm;
+	private String salarySt;
+	private String jobtitleNm;
+	private String salaryDt;
+	private String salaryAmt;
+	public void setDeptName(String deptName) {
+		this.deptName = deptName; 
+	}
+	public String getDeptName() {
+		return deptName; 
+	}
+	public void setEmpNm(String empNm) {
+		this.empNm = empNm; 
+	}
+	public String getEmpNm() {
+		return empNm; 
+	}
+	public void setSalarySt(String salarySt) {
+		this.salarySt = salarySt; 
+	}
+	public String getSalarySt() {
+		return salarySt; 
+	}
+	public void setJobtitleNm(String jobtitleNm) {
+		this.jobtitleNm = jobtitleNm; 
+	}
+	public String getJobtitleNm() {
+		return jobtitleNm; 
+	}
+	public void setSalaryDt(String salaryDt) {
+		this.salaryDt = salaryDt; 
+	}
+	public String getSalaryDt() {
+		return salaryDt; 
+	}
+	public void setSalaryAmt(String salaryAmt) {
+		this.salaryAmt = salaryAmt; 
+	}
+	public String getSalaryAmt() {
+		return salaryAmt; 
+	}
+
+}

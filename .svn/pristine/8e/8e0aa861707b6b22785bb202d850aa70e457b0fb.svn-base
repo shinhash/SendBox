@@ -1,0 +1,208 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"  %>
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<style>
+	.document-editor__toolbar{
+		width : 800px;
+	}
+	.editor{
+		width : 800px;
+		height : 800px;
+	
+	}
+	
+	.writer{
+		border : 1px solid gray;
+		width : 800px;
+	}
+	
+	.ck.ck-widget__selection-handler {
+	  display: none;
+	}
+
+	.ck.ck-content.ck-editor__editable.ck-rounded-corners.ck-editor__editable_inline.ck-blurred > figure,
+	.ck.ck-content.ck-editor__editable.ck-rounded-corners.ck-editor__editable_inline.ck-focused > figure {
+	  margin: 16px 0;
+	}
+	
+	
+	/* #tab{
+
+	}
+	
+	.signResult{
+		width : 60px;
+		height : 80px;
+	}
+	
+	td.labeltd{
+		width : 200px;
+	}
+	td.datatd{
+		width : 80%;
+	}
+	
+	#approvLineTable{
+		width : 100%;
+		text-align: center;
+	} */
+
+</style>
+
+
+	
+	
+	
+	
+	
+	
+
+	
+</head>
+
+<body data-editor="DecoupledDocumentEditor" data-collaboration="false">
+	<h2>기안문 작성</h2>
+	<hr>
+	<div class="document-editor__toolbar"></div>
+	<div class="editor2"></div>
+	<div class="editor"></div>
+	<div class="writer">
+
+		
+	<div>
+	
+	<script src="/ckeditor5/build/ckeditor.js"></script>
+	<script>
+	$(function(){
+			DecoupledDocumentEditor
+			.create( document.querySelector( '.editor' ), {
+
+				toolbar: {
+					items: [
+						'exportPdf',
+						'exportWord',
+					]
+				},
+				language: 'ko',
+				licenseKey: '',
+				
+				exportPdf : {
+					dataCallback: ( editor ) => {
+						//var html = $('#tab').html();
+						var content = editor.getData();
+						return content;
+					}
+				},
+				
+			} )
+			.then( editor => {
+				window.editor = editor;
+		
+				
+				// Set a custom container for the toolbar.
+				document.querySelector( '.document-editor__toolbar' ).appendChild( editor.ui.view.toolbar.element );
+				document.querySelector( '.ck-toolbar' ).classList.add( 'ck-reset_all' );
+				
+				
+				/* const docFrag = editor.model.change( writer => {
+					const p1 = writer.createElement( 'paragraph' );
+					const p2 = writer.createElement( 'paragraph' );
+					const blockQuote = writer.createElement( 'blockQuote' );
+					const docFrag = writer.createDocumentFragment();
+	
+					writer.append( p1, docFrag );
+					writer.append( blockQuote, docFrag );
+					writer.append( p2, blockQuote );
+					writer.insertText( 'foo', p1 );
+					writer.insertText( 'bar', p2 );
+	
+					return docFrag;
+				} );
+	
+				// insertContent() does not have to be used in a change() block. It can, though,
+				// so this code could be moved to the callback defined above.
+				editor.model.insertContent( docFrag );
+				 */
+				
+				const content = '${reportVo.content}';
+				const viewFragment = editor.data.processor.toView( content );
+				const modelFragment = editor.data.toModel( viewFragment );
+
+				editor.model.insertContent( modelFragment );
+				
+				editor.isReadOnly = false;
+				$('*[contenteditable="true"]').attr('contenteditable', false);
+				$('.ck-widget__type-around').remove();
+				$('.editor').on('click', function(){
+				
+					/* $('*[contenteditable="true"]').attr('contenteditable', false); */
+					/* $('div.ck.ck-widget__selection-handle').css({'display' : 'none'}); */					
+				}) 
+				/* $('.ck-widget').remove();  */
+			} )
+			.catch( error => {
+				console.error( 'Oops, something went wrong!' );
+				console.error( 'Please, report the following error on https://github.com/ckeditor/ckeditor5/issues with the build id and the error stack trace:' );
+				console.warn( 'Build id: ywtaruz06pdl-6v1em39f6r66' );
+				console.error( error );
+			} );
+			
+		
+	});
+	
+	</script>
+	
+	
+	<div class="ck-blurred editor ck ck-content ck-editor__editable ck-rounded-corners ck-editor__editable_inline ck-read-only" lang="ko" dir="ltr" role="textbox" aria-label="리치 텍스트 편집기, main" contenteditable="false">
+	<p>adsfadfadsfafdsf</p>
+	<figure class="table ck-widget ck-widget_with-selection-handle" contenteditable="false">
+	<div class="ck ck-widget__selection-handle">
+	<svg class="ck ck-icon" viewBox="0 0 16 16">
+	<path d="M4 0v1H1v3H0V.5A.5.5 0 0 1 .5 0H4zm8 0h3.5a.5.5 0 0 1 .5.5V4h-1V1h-3V0zM4 16H.5a.5.5 0 0 1-.5-.5V12h1v3h3v1zm8 0v-1h3v-3h1v3.5a.5.5 0 0 1-.5.5H12z">
+	</path>
+	<path fill-opacity=".256" d="M1 1h14v14H1z">
+	</path>
+	<g class="ck-icon__selected-indicator">
+	<path d="M7 0h2v1H7V0zM0 7h1v2H0V7zm15 0h1v2h-1V7zm-8 8h2v1H7v-1z"></path>
+	<path fill-opacity=".254" d="M1 1h14v14H1z"></path>
+	</g>
+	</svg>
+	</div>
+	<table>
+	<tbody>
+	<tr>
+	<td class="ck-editor__editable ck-editor__nested-editable" contenteditable="false"><span style="display:inline-block;">dasdfa</span></td>
+	<td class="ck-editor__editable ck-editor__nested-editable" contenteditable="false"><span style="display:inline-block;">
+	<br data-cke-filler="true"></span></td>
+	<td class="ck-editor__editable ck-editor__nested-editable" contenteditable="false"><span style="display:inline-block;">
+	<br data-cke-filler="true"></span></td>
+	<td class="ck-editor__editable ck-editor__nested-editable" contenteditable="false"><span style="display:inline-block;"><br data-cke-filler="true"></span></td></tr></tbody></table>
+	<div class="ck ck-reset_all ck-widget__type-around">
+	<div class="ck ck-widget__type-around__button ck-widget__type-around__button_before" title="Insert paragraph before block">
+	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 8">
+	<path d="M9.055.263v3.972h-6.77M1 4.216l2-2.038M1 4.178l2 2.038"></path>
+	</svg></div>
+	<div class="ck ck-widget__type-around__button ck-widget__type-around__button_after" title="Insert paragraph after block">
+	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 8">
+	<path d="M9.055.263v3.972h-6.77M1 4.216l2-2.038M1 4.178l2 2.038"></path>
+	</svg></div><div class="ck ck-widget__type-around__fake-caret"></div>
+	</div></figure></div>
+	
+	
+	
+	
+	
+	
+	
+	
+</body>
+</html>

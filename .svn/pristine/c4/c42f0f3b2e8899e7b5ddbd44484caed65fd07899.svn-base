@@ -1,0 +1,31 @@
+package kr.or.ddit.business.meeting.service;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.business.meeting.dao.MeetingMapperDao;
+import kr.or.ddit.business.meeting.vo.MeetingVO;
+import kr.or.ddit.business.schedule.vo.ScheduleVO;
+
+@Service("meetingService")
+public class MeetingService{
+	
+	@Resource(name="meetingMapperDao")
+	private MeetingMapperDao meetingMapperDao;
+	
+	public List<MeetingVO> getMeeting() throws Exception {
+		return meetingMapperDao.getMeeting();
+	}
+	
+	public int addMeeting(MeetingVO vo) throws Exception {
+		return meetingMapperDao.addMeeting(vo);
+	}
+
+	
+	
+	
+	
+}

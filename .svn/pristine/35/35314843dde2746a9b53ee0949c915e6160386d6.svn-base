@@ -1,0 +1,108 @@
+package kr.or.ddit.report.vo;
+
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import kr.or.ddit.comm.vo.BaseVO;
+
+public class ReportVO extends BaseVO{
+	private String typeId;							//문서양식번호
+	private String reportDt;						//기안일자
+	private String empId;							//기안자아이디
+	private String reportSt;						//기안상태 ( W: 대기, ing : 진행중, Y : 승인, N : 반려)
+	private String title;							//문서제목
+	private String content;							//문서 내용
+	private String approver;						//현 결재자 아이디
+	private String apprKind;						//결재라인	이름
+	private String reportId;					    //기안번호				
+	private List<ApprovLineVO> approvLineList;		//결재라인
+	private String signInfo;						//기안자의 사인정보
+	private List<ReportSignVO> reportSignList;		//기안문서의 사인정보
+	private List<MultipartFile> fileList;			//기안문서의 첨부파일
+	
+	
+	
+	
+	public List<MultipartFile> getFileList() {
+		return fileList;
+	}
+	public void setFileList(List<MultipartFile> fileList) {
+		this.fileList = fileList;
+	}
+	public String getSignInfo() {
+		return signInfo;
+	}
+	public void setSignInfo(String signInfo) {
+		this.signInfo = signInfo;
+	}
+	public List<ReportSignVO> getReportSignList() {
+		return reportSignList;
+	}
+	public void setReportSignList(List<ReportSignVO> reportSignList) {
+		this.reportSignList = reportSignList;
+	}
+	public void setTypeId(String typeId) {
+		this.typeId = typeId; 
+	}
+	public String getTypeId() {
+		return typeId; 
+	}
+	public void setReportDt(String reportDt) {
+		this.reportDt = reportDt; 
+	}
+	public String getReportDt() {
+		return reportDt; 
+	}
+	public void setEmpId(String empId) {
+		this.empId = empId; 
+	}
+	public String getEmpId() {
+		return empId; 
+	}
+	public void setReportSt(String reportSt) {
+		this.reportSt = reportSt; 
+	}
+	public String getReportSt() {
+		return reportSt; 
+	}
+	public void setTitle(String title) {
+		this.title = title; 
+	}
+	public String getTitle() {
+		return title; 
+	}
+	public void setContent(String content) {
+		this.content = content; 
+	}
+	public String getContent() {
+		return content; 
+	}
+	public void setApprover(String approver) {
+		this.approver = approver; 
+	}
+	public String getApprover() {
+		return approver; 
+	}
+	public void setApprKind(String apprKind) {
+		this.apprKind = apprKind; 
+	}
+	public String getApprKind() {
+		return apprKind; 
+	}
+	public void setReportId(String reportId) {
+		this.reportId = reportId; 
+	}
+	public String getReportId() {
+		return reportId; 
+	}
+	public List<ApprovLineVO> getApprovLineList() {
+		return approvLineList;
+	}
+	public void setApprovLineList(List<ApprovLineVO> approvLineList) {
+		this.approvLineList = approvLineList;
+	}
+	
+	
+
+}

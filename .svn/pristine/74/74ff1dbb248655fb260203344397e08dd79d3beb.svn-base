@@ -1,0 +1,56 @@
+package kr.or.ddit.address.controller;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import kr.or.ddit.address.service.AddrService;
+import kr.or.ddit.address.vo.AddrEmpVO;
+import kr.or.ddit.comm.vo.PaginationVO;
+import kr.or.ddit.notice.controller.NoticeController;
+
+@Controller
+public class AddrController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(NoticeController.class);
+	
+	@Resource(name = "addrService")
+	AddrService addrService;
+	
+	@RequestMapping("/address")
+	public String addressView(Model model,AddrEmpVO addrEmpVO,String standard) {
+		logger.debug("addressEmpVO1 : {}", addrEmpVO);
+		addrEmpVO.setRecordCountPerPage(addrEmpVO.getRecordCountPerPage());
+		addrEmpVO.setPageSize(5);
+		int cnt = 0;
+		
+		if (addrEmpVO.getStandard() != "all") {
+			addrEmpVO.setStandard(standard);
+		}
+		
+		try {
+			List<AddrEmpVO> empList = addrService.retrieveAddressList(addrEmpVO);
+			model.addAttribute("empList", empList);
+			int addrCnt = addrService.addrCount(addrEmpVO);
+			logger.debug("addrCnt : {}", addrCnt);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		PaginationVO pagination = new PaginationVO(addrEmpVO.getPageIndex(), 
+												addrEmpVO.getRecordCountPerPage(), 
+												addrEmpVO.getPageSize(), 
+												cnt);
+		model.addAttribute("pagination", pagination);
+		
+		logger.debug("addressEmpVO2 : {}", addrEmpVO);
+		return "tiles/address/address";
+	}
+
+}
