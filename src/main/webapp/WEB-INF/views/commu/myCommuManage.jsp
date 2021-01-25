@@ -36,18 +36,26 @@
 		});
 		
 
+		// 커뮤니티정보 수정 버튼 클릭 액션함수
 		$("#tb").on("click", ".commuSt", function(){
-			var commuNmHidden = $(this).parents(".trTag").find(".commuNmHidden").val();
-			var commuStHidden = $(this).parents(".trTag").find(".commuStHidden").val();
-			var commuSt = $(this).parents(".trTag").find(".useSelect").val();
-			var commuSeq = $(this).parents(".trTag").find(".commuSeqHidden").val();
-			var commuNm = $(this).parents(".trTag").find(".commuNm").val();
+			// 커뮤니티 정보
+			var commuStHidden = $(this).parents(".trTag").find(".commuStHidden").val();	// 변경 전 커뮤니티 상태코드
+			var commuNmHidden = $(this).parents(".trTag").find(".commuNmHidden").val();	// 변경 전 커뮤니티 이름
 			
+			var commuSt = $(this).parents(".trTag").find(".useSelect").val();			// 변경 후 커뮤니티상태코드
+			var commuNm = $(this).parents(".trTag").find(".commuNm").val();				// 변경 후 커뮤니티 이름
+			var commuSeq = $(this).parents(".trTag").find(".commuSeqHidden").val();		// 커뮤니티 id
+			
+			// 커뮤니티 상태코드와 커뮤니티 이름이 둘다 변경전과 변경후의 값과 같다면 하나도 변경한 것이 아니라고 처리
 			if(commuStHidden == commuSt && commuNmHidden == commuNm){
-				alert("변경하지 않았습니다.")
-			}else{
-				alert("변경하였습니다.")
-				document.location = "/commu/updateCommu?commuSeq="+commuSeq+"&commuSt="+commuSt+"&commuNm="+commuNm;
+				alert("변경하지 않았습니다.");
+			}else{ // 둘중 하나라도 값이 변경되었다면 변경된 값을 controller에 전송
+				$("#commuSeq").val(commuSeq);
+				$("#commuSt").val(commuSt);
+				$("#commuNm").val(commuNm);
+				$("#commuInfoUpdateForm").attr("action", "/commu/updateCommu");
+				$("#commuInfoUpdateForm").attr("method", "post");
+				$("#commuInfoUpdateForm").submit();
 			}
 		});
 		
@@ -79,11 +87,7 @@
 <!--                             <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-fw fa-head-side-cough-slash" style="margin-left: 10px;"></i>&nbsp업무시간 마스크는 필수입니다.</h6> -->
                         </div>
                         <div class="card-body">
-                        
-                        
                             <div class="table-responsive" style="overflow: hidden;">
-                            
-                            
                                 <table class="table table-bordered" width="100%" cellspacing="0">
 									<thead>
 										<tr>
@@ -98,10 +102,8 @@
 											<c:when test="${commuList.size() > 0}">
 												<c:forEach items="${commuList }" var="commuVO">
 													<tr class="trTag" style="height : 10px;">
-														<td>
-															<img class="commu_img" alt="${commuVO.commuNm }" id="${commuVO.commuSeq }" 
-															src="/commu/commuIconView?commuSeq=${commuVO.commuSeq }" >
-														</td>
+														<td><img class="commu_img" alt="${commuVO.commuNm }" id="${commuVO.commuSeq }" 
+															src="/commu/commuIconView?commuSeq=${commuVO.commuSeq }"></td>
 														<td><input type="text" class="commuNm" value="${commuVO.commuNm }" /></td>
 														<td>${commuVO.empId }</td>
 														<td>
@@ -135,15 +137,16 @@
 										</c:choose>
 									</tbody>
 								</table>
-								
+								<form id="commuInfoUpdateForm">
+									<input type="hidden" id="commuSeq" name="commuSeq">
+									<input type="hidden" id="commuSt" name="commuSt">
+									<input type="hidden" id="commuNm" name="commuNm">
+								</form>
 								<!-- 커뮤니티 생성 버튼 -->
 								<input type="button" id="createCommu" class="btn btn-success" value="커뮤니티 생성" style="display:inline; float: right;">
-								
-								
                             </div>
 						</div>
                     </div>
-
                 </div>
                 <!-- /.container-fluid -->
 

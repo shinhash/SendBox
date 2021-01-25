@@ -346,15 +346,9 @@
 			
 			// 방 만들기 버튼 클릭
 			$("#createChatRoomBtn").on("click", function(){
-				
 				var CRName = eddedEmpNameArr.slice();
-				console.log("CRName = ", CRName);
-				
 				var chatRoomPassword = $("#chatRoomPassword").val();// 채팅방 비밀번호
-
-				console.log(empIdArr)
 				if(empIdArr.length > 0){
-					
 					var tempRN = "${EMP.empNm}";
 					for(var en=0; en<CRName.length; en++){
 						if(en >= 2){
@@ -363,9 +357,6 @@
 						}
 						tempRN += ","+CRName[en];
 					}
-					console.log("tempRN = ", tempRN); // 채팅방 이름
-					
-					
 					if(tempRN != ''){
 						$.ajax({
 							url		: "/chat/createChatRoom",

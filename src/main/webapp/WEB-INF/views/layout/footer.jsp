@@ -471,13 +471,13 @@ main footer a{
 	$(function(){
 		
 		$("#alertsDropdownChat").hide();
+		
+		
 		// 주소록 불러오기
 		$("#showMyAddrBtn").on("click", function(){
-			
 			var uri = "/chat/showAddrList";
 			var popupName  = "주소록";
 			var options = "width=500,height=600, left = 800, top=200,location=no";
-			
 			window.open(uri, popupName, options,);
 		});
 		
@@ -533,7 +533,6 @@ main footer a{
 		// 채팅방 검색하기
 		$("#searchRoomName").keyup(function(){
 			var chatRoom = $("#searchRoomName").val();
-			console.log("chatRoom = ", chatRoom);
 			$.ajax({
 				url		: "/chat/mychatList",
 				data	: { empId 		 : "${EMP.empId}",
@@ -541,24 +540,14 @@ main footer a{
 				dataType: "json",
 				method	: "post",
 				success	: function(data){
-					
 					$("#chat").html("");
-					
-						
-					console.log(data.chatRoomList);
-					
 					var chatRMInfo = "";
-					
 					data.searchChatRoomNm = chatRoom.slice();
-					console.log("data.searchChatRoomNm = ", data)
-					
 					// 해당 사원의 채팅방 리스트를 반환하는 함수
 					chatRMInfo = chatRMInfoList(data);
-					
 					$("#chatTitleName").html("sendbox chat");
 					$("#chatRoomList").html(chatRMInfo);
 					selectAlarmEmp();
-					
 					$("#alertsDropdownChat").hide();
 					$("#message").hide();
 					$("#sendChatBtn").hide();
@@ -868,15 +857,14 @@ main footer a{
 	
 	// 해당 사원의 채팅방 리스트를 반환하는 함수
 	function chatRMInfoList(data){
-		
 		var chatRMInfo = "";
-		
 		var inputText = "";
 		if(data.searchChatRoomNm != null && data.searchChatRoomNm != ""){
 			inputText = data.searchChatRoomNm;
 		}
 		$.each(data.chatRoomList, function(){
-			chatRMInfo += "<li id='chatAlarm_"+this.chatrmId+"' class='chatrmId' data-roomid='"+this.chatrmId+"' data-roomname='"+this.chatrmNm+"'>";
+			chatRMInfo += "<li id='chatAlarm_"+this.chatrmId+"' class='chatrmId' data-roomid='";
+			chatRMInfo += this.chatrmId+"' data-roomname='"+this.chatrmNm+"'>";
 			chatRMInfo += "	<div>";
 			chatRMInfo += "		<h2>"+this.chatrmNm;
 			chatRMInfo += "	<span id='CRMACnt' class='badge badge-danger badge-counter'></span>";

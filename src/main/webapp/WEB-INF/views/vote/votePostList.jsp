@@ -237,12 +237,10 @@
 			$("#votePostCreatBtn").on("click", function(){
 	        	voteItemTF = true;
 	        	voteStartDtTF = true;
-	        	
 	        	// 투표 제목 확인
 	        	if($("#title").val() == ""){
 	        		alert("투표 제목을 작성해주세요.");
 	        	}
-	        	
 	        	// 투표 항목 확인
 	        	var voteItemLen = $(".voteItemAddedInfo").length;
 	        	for(var i=0; i<voteItemLen; i++){
@@ -253,7 +251,6 @@
 		        		break;
 					}
 	        	}
-	        	
 	        	// 투표 날짜 확인
 	        	var startDT = $("#votePostSD").val();
 	        	var endDT = $("#votePostED").val();
@@ -398,9 +395,7 @@
                                         </tr>
                                     </thead>
                                     <tbody id="CommuBoardTableBody">
-                                    
                                   		<c:choose>
-											
                                   			<c:when test="${votePostList.size() > 0}">
 	                                   			<c:forEach var="i" begin="0" end="${votePostList.size()-1}" step="1">
 												<tr class="votePostLineTr">
@@ -418,10 +413,8 @@
 													<td class="votePostStatus">
 														<jsp:useBean id="now" class="java.util.Date" />
 														<fmt:formatDate value="${now }" pattern="yyyyMMdd" var="date"/>
-														
 														<fmt:parseNumber value="${date }" var="toDay"></fmt:parseNumber>
 														<fmt:parseNumber value="${votePostList.get(i).votePostEndDt }" var="endDtNum"></fmt:parseNumber>
-														
 														<c:if test="${votePostList.get(i).votePostSt == 'COM'}">
 															<span style="color: green;">채택됨</span>
 														</c:if>
@@ -435,20 +428,15 @@
 															 <span style="color: gray;">마감</span>
 														</c:if>
 													</td>
-													
 												</tr>
 												</c:forEach>
                                   			</c:when>
-                                  			
                                   			<c:otherwise>
                                   				<tr>
 													<td colspan="8" style="text-align: center;">데이터 없음</td>
 												</tr>
                                   			</c:otherwise>
-                                  		
                                   		</c:choose>
-		                                   	
-                                   	
 									</tbody>
                                 </table>
                             </div>

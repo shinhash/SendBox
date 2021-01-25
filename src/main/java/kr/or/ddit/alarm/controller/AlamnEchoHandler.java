@@ -65,15 +65,11 @@ public class AlamnEchoHandler extends TextWebSocketHandler{
 	
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+		// 등록버튼 클릭 시 저장되는 메시지 Text
 		String msg = message.getPayload();
-		
-		logger.debug("msg : {}", msg);
-		
-		
-		if(StringUtils.isEmpty(msg)) {
-		}else {
+		if(StringUtils.isEmpty(msg)) {	// 메시지 Text문자열이 비어있을 경우 
+		}else {						  	// 메시지 Text문자열이 비어있지 않을 경우
 			String[] msgStr = msg.split(",");
-			
 			if(msgStr != null && msgStr.length == 5) {
 				String cmd = msgStr[0];				// 메시지의 형식
 				String caller = msgStr[1];			// 보내는 사원
@@ -81,45 +77,23 @@ public class AlamnEchoHandler extends TextWebSocketHandler{
 				String linkInfoText = msgStr[3];	// 링크 텍스트
 				String cmdStText = msgStr[4];		// 메시지 내용
 				
-				
-				logger.debug("보내는자 : {}", caller);
-				logger.debug("받는자 : {}", receiverEmpId);
-				
-				
-				
 				// 로그인한 전 사원중 map에 저장된 사원id와 알림을 보내려는 사원id가 일치하는 
 				// 사원의 session에 알림 메시지 전달
 				for(int i=0; i<empAlamnMapSessionList.size(); i++) {
-					
-					logger.debug("서버 받는사원 : {}", empAlamnMapSessionList.get(i).get("empId"));
-					
+					// 메시지의 받는 사원id와 List<Map>에 저장된 사원id가 일치하는것이 있을 경우 해당 socketSession정보 저장
 					if((empAlamnMapSessionList.get(i).get("empId")).equals(receiverEmpId)) {
-						
-						logger.debug("========================================================================");
-						logger.debug("");
-						logger.debug("");
-						logger.debug("서버 받는사원 : {}", empAlamnMapSessionList.get(i).get("empId"));
-						logger.debug("로컬 받는사원 : {}", receiverEmpId);
-						logger.debug("");
-						logger.debug("");
-						logger.debug("========================================================================");
-						
 						WebSocketSession alarmSession = (WebSocketSession) empAlamnMapSessionList.get(i).get("empSocketSession");
-						
+						// 해당 사원의 session정보가 null이지 않을 경우 메시지 전송처리 실행
 						if(alarmSession != null) {
+							// 전송할 Text정보를 저장할 TextMessage객체 생성
 							TextMessage tmpMsg = new TextMessage(cmd + ":" + caller + ":" + linkInfoText + ":" + cmdStText);
+							// 해당 사원 socketSession에 TextMessage객체 전송
 							alarmSession.sendMessage(tmpMsg);
 						}
 						break;
 					}
 				}
 			}
-			
-			
-			
-			
-			
-			
 		}
 	}
 	

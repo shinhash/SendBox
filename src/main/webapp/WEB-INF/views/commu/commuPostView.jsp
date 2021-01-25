@@ -72,14 +72,12 @@
         
         
         $("#repleInsertBtn").on("click", function(){
-        	
         	var message = $("#repleContent").val();
-        	
         	var commuEmpId = "${commuBoard.empId}";
         	var dbEmpId = "${EMP.empId}";
         	if(message != ""){
        			if(commuEmpId != dbEmpId){
-           			// 채팅알람을 모든인원의 알람테이블에 저장(insert)
+           			// 댓글 알람정보 저장 및 게시글작성자에게 알람 띄우기
                 	if(message.length > 10){
         				message  = message.split(0, 10) + "...";
         			}
@@ -181,20 +179,15 @@
 	                    <table style="width:100%;" id="boardViewTable">
 	                    	<tr>
 	                    		<td class="front">제목</td>
-	                    		<td>
-	                    			<span>${commuBoard.boardTitle }</span>
-	                    		</td>
+	                    		<td><span>${commuBoard.boardTitle }</span></td>
 	                    	</tr>
 	                    	<tr>
 	                    		<td class="front">작성자</td>
-	                    		<td>
-	                    			<span>${commuBoard.empNm } ${empTitle }</span>
-	                    		</td>
+	                    		<td><span>${commuBoard.empNm } ${empTitle }</span></td>
 	                    	</tr>
 							<tr>
 								<td class="front"><i class="fas fa-fw fa-paperclip" style="margin-left: 10px;"></i>첨부파일</td>
 								<td id="fileAddTD">
-								
 									<!-- db에서 파일 가져오기 -->
 									<div id="DBfileDivParent" class="col-sm-10 DBfileAddedDiv" style="margin-bottom : 5px;">
 										<c:if test="${commuBoardFileList.size() > 0}">
@@ -219,9 +212,8 @@
 						 	<input type="hidden" name="boardTitle" value="${commuBoard.boardTitle }"/>
 						 	<input type="hidden" name="boardSeq" value="${commuBoard.boardSeq }"/>
 						 	
-						 	
 						 	<input id="backBtn" type="button" class="btn btn-left" value="목록" 
-						 	style="display:inline; margin-right: 10px; float: left; background: #104467; color: white;"/>
+						 		   style="display:inline; margin-right: 10px; float: left; background: #104467; color: white;"/>
 						 	<c:if test="${EMP.empId == commuBoard.empId}">
 							 	<input type="button" id="updateBoardBtn" class="btn btn-warning" value="수정" style="float: right; margin-left: 10px;"/>
 							 	<input type="button" data-toggle="modal" data-target="#delBoardModal" class="btn btn-danger" value="삭제" style="float: right;"/>
@@ -302,9 +294,6 @@
 						    </div>
 						  </div>
 						</div>
-						
-						
-						
 						
 						<!-- reple delete Modal -->
 						<div class="modal fade" id="delRepleModal" tabindex="-1" role="dialog" aria-labelledby="delRepleModalabel" aria-hidden="true">

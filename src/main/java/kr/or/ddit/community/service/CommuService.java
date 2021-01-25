@@ -218,19 +218,9 @@ public class CommuService {
 	 * @throws Exception 
 	 */
 	public int insertCommuBoard(List<MultipartFile> fileList, CommuBoardVO commuBoardVO, EmpVO dbEmp) {
-		
 		// 게시글 등록
 		commuBoardVO.setEmpId(dbEmp.getEmpId());
 		commuBoardVO.setEmpNm(dbEmp.getEmpNm());
-		
-		System.out.println("============================================================");
-		System.out.println("");
-		System.out.println("");
-		System.out.println("commuBoardVO : "+ commuBoardVO);
-		System.out.println("");
-		System.out.println("");
-		System.out.println("============================================================");
-		
 		
 		int insertRes = 0;			// 게시글 전체 저장결과
 		int boardFileAllCnt = 0;	// 전체 파일의 수
@@ -239,41 +229,25 @@ public class CommuService {
 		try {
 			commuBoardInsert = commuMapperDao.insertCommuBoard(commuBoardVO);
 			CommuBoardFileVO commuBoardFileVO = null;
-			
 			// 게시글 등록 성공시 실행
 			if(commuBoardInsert > 0) {
-				
 				// file 등록
 				if(fileList.size() > 0 && fileList != null) {
 					for(MultipartFile file : fileList) {
 						if(!file.getOriginalFilename().equals("") && file.getSize() > 0) {
+							boardFileAllCnt++; // 파일의 전체갯수 카운트
+							String fileRealName = file.getOriginalFilename(); // 파일의 진짜 이름(이름 + 확장자)
+							String tempName = UUID.randomUUID().toString(); // uuid 생성 후 대입
 							
-							boardFileAllCnt++;
-							
-							// 파일의 진짜 이름(이름 + 확장자)
-							String fileRealName = file.getOriginalFilename();
-							
-							// uuid
-							String tempName = UUID.randomUUID().toString();
-							
-							// file 확장자
-							String fileEx = FileUploadUtil.getExtension(fileRealName);
-							
+							String fileEx = FileUploadUtil.getExtension(fileRealName); // file 확장자
 							// db에 저장할 파일의 경로와 파일의 이름 + 확장자
 							String filePath = "D:\\sendbox\\commuFile\\" + tempName + "." + fileEx;
-							
-							
 							File insertFile = new File(filePath);
-							
-							// 파일 업로드
-							file.transferTo(insertFile);
-							
-							
-							// 파일경로를 db에 저장
-							commuBoardFileVO = new CommuBoardFileVO();
+							file.transferTo(insertFile); // 파일 업로드
+							commuBoardFileVO = new CommuBoardFileVO(); // 파일경로를 db에 저장
 							commuBoardFileVO.setFilepath(filePath);
 							commuBoardFileVO.setRealfilename(fileRealName);
-							
+							// 첨부파일정보를 DB의 commufile테이블에 저장
 							int insertFileCnt = commuMapperDao.insertCommuBoardFile(commuBoardFileVO);
 							if(insertFileCnt == 1) {
 								boardInsertFileCnt++;
@@ -283,7 +257,7 @@ public class CommuService {
 				}
 			}
 		}catch(Exception e) { e.printStackTrace(); }
-		
+		// 게시글정보 저장을 성공하면서 전송한 파일갯수와 저장성공된 파일갯수가 일치할시 게시글 저장성공 처리
 		if(commuBoardInsert == 1 && boardFileAllCnt == boardInsertFileCnt) {
 			insertRes = 1;
 		}
@@ -325,79 +299,48 @@ public class CommuService {
 	 * @throws Exception
 	 */
 	public int updatePost(HttpSession session, CommuBoardVO commuBoardVO, List<MultipartFile> fileList, List<Integer> delFileList) {
-		
 		int boardFileAllCnt = 0;			// 추가한 파일의 전체 파일의 수
 		int boardInsertFileCnt = 0; 		// 추가한 파일의 저장한 파일의 수
-		
 		int delCommuBoardFileAllCnt = 0;	// 삭제파일의 전체 파일의 수
 		int delCommuBoardFileCnt = 0;		// 삭제파일의 삭제한 파일의 수
-		
-		
 		EmpVO dbEmp = (EmpVO) session.getAttribute("EMP");
-		
 		commuBoardVO.setEmpId(dbEmp.getEmpId());
-		
 		int updateCommuBoard = 0;;
 		try {
 			updateCommuBoard = commuMapperDao.updateCommuBoard(commuBoardVO);
-			
 			// update 성공시 실행
 			if(updateCommuBoard == 1) {
-				
 				// 삭제한 파일 리스트
 				if(delFileList != null && delFileList.size() > 0) {
-					
 					for(Integer delFileId : delFileList) {
-						
 						delCommuBoardFileAllCnt++;
-						
 						CommuBoardFileVO commuBoardFileVO = new CommuBoardFileVO();
 						commuBoardFileVO.setAttachfileSeq(delFileId);
-						
+						// 선택한 첨부파일 삭제처리 ==> 상태코드 'Y'에서 'N'으로 변경
 						int updateBoardFile = commuMapperDao.updateCommuBoardFile(commuBoardFileVO);
 						if(updateBoardFile == 1) {
 							delCommuBoardFileCnt++;
 						}
 					}
 				}
-				
-				
-				
-				
-				
 				// file 등록
 				if(fileList.size() > 0 && fileList != null) {
 					for(MultipartFile file : fileList) {
 						if(!file.getOriginalFilename().equals("") && file.getSize() > 0) {
-							
-							logger.debug("file : {}", file);
-							
-							boardFileAllCnt++;
-							
-							// 파일의 진짜 이름(이름 + 확장자)
-							String fileRealName = file.getOriginalFilename();
-							
-							// uuid
-							String tempName = UUID.randomUUID().toString();
-							
-							// file 확장자
-							String fileEx = FileUploadUtil.getExtension(fileRealName);
-							
+							boardFileAllCnt++; // 게시글 첨부파일 총 갯수
+							String fileRealName = file.getOriginalFilename(); // 파일의 진짜 이름(이름 + 확장자)
+							String tempName = UUID.randomUUID().toString(); // uuid
+							String fileEx = FileUploadUtil.getExtension(fileRealName); // file 확장자
 							// db에 저장할 파일의 경로와 파일의 이름 + 확장자
 							String filePath = "D:\\sendbox\\commuFile\\" + tempName + "." + fileEx;
-							
-							
 							File insertFile = new File(filePath);
-							
-							// 파일 업로드
-							file.transferTo(insertFile);
-							
+							file.transferTo(insertFile); // 파일 업로드
 							// 파일경로를 db에 저장
 							CommuBoardFileVO commuBoardFileVO = new CommuBoardFileVO();
 							commuBoardFileVO.setFilepath(filePath);
 							commuBoardFileVO.setRealfilename(fileRealName);
 							commuBoardFileVO.setBoardSeq(commuBoardVO.getBoardSeq());
-							
+							// 새로운 첨부파일 저장
 							int insertFileCnt = commuMapperDao.insertCommuBoardFile(commuBoardFileVO);
 							if(insertFileCnt == 1) {
 								boardInsertFileCnt++;
@@ -406,9 +349,8 @@ public class CommuService {
 					}
 				}
 			}
-			
 		} catch (Exception e) { e.printStackTrace(); }
-		
+		// 저장첨부파일의 전체갯수와 저장성공한 첨부파일 갯수가 일치하고 삭제첨부파일의 전체갯수와 삭제성공한 첨부파일 갯수가 일치하면서 게시글 수정결과가 성공일 경우 성공처리
 		if((boardFileAllCnt == boardInsertFileCnt) && (delCommuBoardFileAllCnt == delCommuBoardFileCnt) && (updateCommuBoard == 1)) {
 			return 1;
 		}else {

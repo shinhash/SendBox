@@ -9,27 +9,20 @@
 <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.js"></script>
 <script>
-
 	chatRoomId = "";
 	chatRoomName = "";
 	chatShowStatus = false;
 	chatNewArr = [];
 	chatAlarmArr = [];
-	
 	chatClickCnt = 0;
-	
 	// 현재 접속한 채팅방id
 	currChatRoomId = "";
-
 
 	// 웹소켓 알림 전역 변수
 	var socket = null;
 	$(document).ready(function(){
-		
-		
 		// 소켓 연결 시작
 		connectWs();
-		
 		$.ajax({
 			
 			url : "/mail/count",
@@ -39,45 +32,30 @@
 				$("#mailCountSpan").text(parseInt(data.cnt));
 			}
 		})
-		
-		
 		// 알람 정보 리스트 함수
 		selectAlarmEmp();
-		
 		$("#alertsDropdown2").on("click", function() {
 			document.location = "/address";
 		});
-		
 		$("#headerAddressBook").on("click", function(){
 			document.location = "/address";
 		});
 	});
 	
-	
-	
-	
-	
-	
-	
 	// 웹소켓 연결을 통한 알림 함수
 	function connectWs() {
 		sock = new SockJS("<c:url value='/socketAlamn'/>");
 		socket = sock;
-
 		// socket 시작
 		sock.onopen = function() {
 			console.log('info: connection opened.');
 		};
-
 		// 소켓통신이 시작되면 java단의 handler에서 socket list에 저장된 모든 사람에게
 		// 메시지를 전달 ==> afterConnectionEstablished() 메서드
 		// afterConnectionEstablished() 메서드 실행시 보내진 데이터를 evt라는 변수로 활용
 		sock.onmessage = function(evt) {
-			
 			console.log("evt : ", evt);
-			
 			var myAlarmCnt = 0;
-			
 			var alarmDataTemp = evt.data;
 			var alarmData = alarmDataTemp.split(":");
 			console.log("알람 내용 : ", alarmData);
@@ -88,33 +66,26 @@
 				alert("사원님의 기안이 승인되었습니다.\n기안내용 : ["+repAlarm[1]+"]");
 			}
 			// 기안 완료 알람 종료
-			
-			// 기안 결재 알람 종료
+			// 기안 결재 알람 시작
 			if(alarmData[0] == "repNext"){
 				var repAlarm = alarmData[2].split("=");
 				alert("결재할 기안이 도착했습니다.\n기안내용 : ["+repAlarm[1]+"]");
 			}
 			// 기안 결재 알람 종료
-			
-			
-			// 기안 반려 알람 종료
+			// 기안 반려 알람 시작
 			if(alarmData[0] == "repCancel"){
 				var repAlarm = alarmData[2].split("=");
 				alert("기안반려 알림이 도착했습니다.\n기안내용 : ["+repAlarm[1]+"]");
 			}
 			// 기안 반려 알람 종료
 			/* ================================================================ */
-			
-			
 			// 알람 정보 리스트 함수
 			selectAlarmEmp();
 		};
-
 		sock.onclose = function() {
 			console.log('connect close');
 			/* setTimeout(function(){conntectWs();} , 1000); */
 		};
-
 		sock.onerror = function(err) {
 			console.log('Errors : ', err);
 		};
@@ -124,10 +95,7 @@
 		}
 	}
 	
-	
 	$(function(){
-		
-
 		// 알람 전체 지우기
 		$("#alarmAllDel").on("click", function(){
 			$.ajax({
@@ -147,7 +115,6 @@
 		// 알람 선택 클릭시 확인했다는 상태로 변경
 		$('#alamnListDiv').on('click','.dropdown-item',function(){
 			var alarmSeq = $(this).attr('id')
-			
 			$.ajax({
 				url : "/alarm/alarmReadCheck",
 				method : "post",
@@ -158,45 +125,36 @@
 					selectAlarmEmp();
 				}
 			});		
-
 			var alarmtype = $(this).data("alarmtype");
 			var alarmLinkCont = $(this).data("alarmlink");
 			var chatTF = false;
-			
 			if(alarmtype != "chat"){
 				// link info
 				var linkInfo = alarmLinkCont.split("?");
 				$("#alarmLinkForm").empty();
 				if(alarmtype == "post"){
-					
 					var value = linkInfo[1].split("=");
 					var tagTemp = "<input type='hidden' name='boardSeq' value='"+value[1]+"' />";
 					$("#alarmLinkForm").append(tagTemp);
 					$("#alarmLinkForm").attr("action", linkInfo[0]);
 				}
 				if(alarmtype == "voteEmp"){
-					
 					var valueTemp = linkInfo[1].split("&");
 					var value = valueTemp[1].split("=");
-					
 					var tagTemp = "<input type='hidden' name='myORall' value='all' />"
 					tagTemp += "<input type='hidden' name='votePostSeq' value='"+value[1]+"' />";
 					$("#alarmLinkForm").append(tagTemp);
 					$("#alarmLinkForm").attr("action", linkInfo[0]);
 				}
 				if(alarmtype == "repCOMPLETE" || alarmtype == "repNext" || alarmtype == "repCancel"){
-					
 					var value = alarmLinkCont.split("=");
 					var tagTemp = "<input type='hidden' name='reportId' value='"+value[1]+"' />"
 					$("#alarmLinkForm").append(tagTemp);
-					
 					$("#alarmLinkForm").attr("action", "/report/reportView");
 				}
 				$("#alarmLinkForm").attr("method", "post");
 				$("#alarmLinkForm").submit(); 
 			}
-			
-			
 		});
 		
 		

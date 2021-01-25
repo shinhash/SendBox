@@ -211,20 +211,15 @@
 					break;
 				}
 			}
-			
 			// 투표를 아직 하지 않은 사원일 경우 실행
 			if(empVoteTF == false){
-				
 				var voteEmpId = "${votePost.empId}";
 				var empId = "${EMP.empId}";
-				
 				// 채팅알람을 모든인원의 알람테이블에 저장(insert)
 				// 투표를 생성한 본인에게는 알람이 가지 않도록 처리
 				if(voteEmpId == empId){
 				}else{
 					var alarm_cont = "voteEmp" + ":+:" + "${EMP.empNm}님이 투표를 하셨습니다.";
-	    			console.log(alarm_cont);
-	    			
 	    			var voteEmpAlarmLink = "/vote/votePostView?myORall=all&votePostSeq=${votePost.votePostSeq}";
 	    			$.ajax({
 	    				url		: "/alarm/alarmPostInsert",
@@ -239,7 +234,6 @@
 	    				error	: function(error){ alert("error : " + error.status); }
 	    			});
 				}
-    			
     			$("#voteItemCode").val(voteItemCode);
 				$("#votePostSeq").val("${votePost.votePostSeq}");
 				$("#votePostEmpInsertForm").attr("method", "post");
@@ -355,12 +349,9 @@
 						<table id="votePostInfoTable">
 							<tr class="voteTopAndCenterLine">
 								<td class="votePostViewLeft">
-								
 									<table id="votePostInfoViewTable" style="border-radius: 0px 20px 20px 20px;">
-										
 										<tr class="votePostTitleLine" style="font-size: 12px; text-align: center; height: 10%;">
 											<td style="width: 20%;">투표상태 : 
-												
 												<c:if test="${votePost.votePostSt == 'COM'}">
 													<span style="color: white; background: green; border-radius: 20%; padding: 5px;">채택됨</span>
 												</c:if>

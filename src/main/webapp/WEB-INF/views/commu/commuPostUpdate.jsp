@@ -139,17 +139,17 @@
                     
                     
                     <!-- summernote -->
+                    
 					<form action="/commu/updatePost" method="post" id="postUpdateForm" enctype="multipart/form-data">
-						
 	                    <table  width="100%" cellspacing="0">
 	                    	<tr>
 	                    		<td class="front">제목</td>
-	                    		<td><input type="text" id="tit" name="boardTitle" autofocus maxlength="30" minlength="1" style="margin-left: 10px; width: 90%;" value="${commuBoard.boardTitle }"></td>
+	                    		<td><input type="text" id="tit" name="boardTitle" autofocus maxlength="30" minlength="1" 
+	                    				   style="margin-left: 10px; width: 90%;" value="${commuBoard.boardTitle }"></td>
 	                    	</tr>
 							<tr>
 								<td class="front"><i class="fas fa-fw fa-paperclip" style="margin-left: 10px;"></i>첨부파일</td>
 								<td id="fileAddTD">
-								
 									<!-- db에서 파일 가져오기 -->
 									<div id="DBfileDivParent" class="col-sm-10 DBfileAddedDiv" style="margin-bottom : 5px;">
 										<c:if test="${commuBoardFileList.size() > 0}">
@@ -164,7 +164,6 @@
 											</c:forEach>
 										</c:if>
 									</div>
-									
 									<!-- 파일 추가하기 -->
 									<div class="col-sm-10 fileDiv" style="margin-bottom : 5px;">
 										<input type="file" name="file">
@@ -183,11 +182,7 @@
 					 	<input type="hidden" name="boardSeq" value="${commuBoard.boardSeq }" />
 					 	<input type="button" id="updateBtn" class="btn btn-outline-success" value="등록" style="display:inline; float: right;">
 					 	<input id="backBtn" type="button" class="btn btn-outline-primary" value="목록" style="display:inline;margin-right : 10px; float: left;">
-					 	
-					 	
 					 	<div id="deleteDBFileDiv"></div>
-					 	
-					 	
 					</form>
 					
 					

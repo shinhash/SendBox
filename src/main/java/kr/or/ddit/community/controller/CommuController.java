@@ -46,10 +46,12 @@ public class CommuController {
 	@RequestMapping("/commu/myCommuManage")
 	public String  myCommuManage(HttpSession session, Model model) {
 		
+		// 로그인시 세션에 저장된 사원정보 가져오기
 		EmpVO empVO = (EmpVO) session.getAttribute("EMP");
 		CommuVO commuVO = new CommuVO();
 		commuVO.setEmpId(empVO.getEmpId());
 		
+		// 사원이 생성한 커뮤니티 정보리스트 가져오기
 		List<CommuVO> commuList = commuService.selectMyCommu(commuVO);
 		model.addAttribute("commuList", commuList);
 		return "tiles/commu/myCommuManage";
@@ -63,6 +65,7 @@ public class CommuController {
 	
 	@RequestMapping("/commu/createCommuView")
 	public String createCommuVIew() {
+		// 커뮤니티 생성 페이지 이동
 		return "tiles/commu/createCommu";
 	}
 	
@@ -74,10 +77,11 @@ public class CommuController {
 	
 	@RequestMapping("/commu/createCommu")
 	public String createCommu(HttpSession session, CommuVO commuVO, @RequestPart(name = "file") MultipartFile file) {
-		
+		// 로그인시 세션에 저장된 사원정보 가져오기
 		EmpVO dbEmp = (EmpVO) session.getAttribute("EMP");
 		commuVO.setEmpId(dbEmp.getEmpId());
 		
+		// 생성하려는 커뮤니티 정보 DB에 저장
 		int insertCommu = commuService.insertCommu(commuVO, file);
 		if(insertCommu == 1) {
 			return "redirect:/commu/myCommuManage";
@@ -97,7 +101,7 @@ public class CommuController {
 	
 	@RequestMapping("/commu/updateCommu")
 	public String updateCommu(CommuVO commuVO) {
-		
+		// DB에 접속 후 해당 커뮤티니정보를 가져온 커뮤티니 정보로 수정
 		int updateCommuRes = commuService.updateCommu(commuVO);
 		return "redirect:/commu/myCommuManage";
 	}
@@ -177,97 +181,60 @@ public class CommuController {
 	
 	
 	@RequestMapping("/commu/commuBoardList")
-	public String commuBoardView(CommuBoardVO commuBoardVO, Model model, HttpSession session,
-								 @RequestParam(name = "searchCondition", required = false) String searchCondition,
-								 @RequestParam(name = "searchKeyword", required = false) String searchKeyword) {
-		
-		logger.debug("=======================================");
-		logger.debug("");
-		logger.debug("");
-		logger.debug("commuBoardVO : {}", commuBoardVO);
-		logger.debug("searchCondition : {}", searchCondition);
-		logger.debug("searchKeyword : {}", searchKeyword);
-		logger.debug("");
-		logger.debug("");
-		logger.debug("=======================================");
-		
-		if(searchCondition != null) {
-			commuBoardVO.setSearchCondition(searchCondition);
-		}
-		if(searchKeyword != null) {
-			commuBoardVO.setSearchKeyword(searchKeyword);
-		}
-		
-		
-		
+	public String commuBoardView(CommuBoardVO commuBoardVO, Model model, HttpSession session) {
 		try {
 			// 커뮤니티 board 리스트
 			List<CommuBoardVO> commuBoardList = commuService.selectListCommuPost(commuBoardVO);
-
 			// 커뮤니티 전체 페이지 수
 			int commuListCount = commuService.selectCommuBoardPageAllCount(commuBoardVO);
-			
 			CommuVO commuVO = new CommuVO();
 			commuVO.setCommuSeq(commuBoardVO.getCommuSeq());
-			
 			// 커뮤니티 이름
 			List<CommuVO> commuList = commuService.selectCommu(commuVO);
 			
-			
 			// 커뮤니티 북마크 확인
-			EmpVO emp = (EmpVO) session.getAttribute("EMP");
-			
+			EmpVO emp = (EmpVO) session.getAttribute("EMP"); // 로그인한 사원의 사원정보
 			CommuBKMKVO commuBkmk = new CommuBKMKVO();
 			commuBkmk.setCommuSeq(commuBoardVO.getCommuSeq());
 			commuBkmk.setEmpId(emp.getEmpId());
 			
+			// 로그인한 사원의 해당 커뮤니티 북마크 유무 정보
 			CommuBKMKVO dbCommuBkmk = commuService.selectMyBookMark(commuBkmk);
-			
 			// 해당 게시글 작성자의 직급
 			// 해당 게시 작성자의 부서, 팀명
 			List<String> empTitleList = null;
 			List<VotePostEmpDeptVO> empDeptInfoList = null;
 			if(commuBoardList.size() > 0 && commuBoardList != null) {
-				
 				empTitleList = new ArrayList<String>();
 				empDeptInfoList = new ArrayList<VotePostEmpDeptVO>();
-				
+				// 작성한 사원의 직급정보와 부서정보, 팀정보 가져오기 
 				for(CommuBoardVO tempVO  : commuBoardList) {
-					
+					// 직급정보 가져오기
 					JobTitleVO empJobTitleVO = commuService.selectCommuBoardListEmpJobTitle(tempVO.getEmpId());
 					empJobTitleVO.setEmpId(tempVO.getEmpId());
-					
+					// 부서, 팀 정보 가져오기
 					VotePostEmpDeptVO empDeptVO = commuService.selectCommuBoardListEmpDeptInfo(empJobTitleVO);
 					empTitleList.add(empJobTitleVO.getJobtitleNm());
 					empDeptInfoList.add(empDeptVO);
 				}
 				model.addAttribute("empTitleList", empTitleList);
 				model.addAttribute("empDeptInfoList", empDeptInfoList);
-				logger.debug("empDeptInfoList : {}", empDeptInfoList);
 			}
-			
-			
-			
-			
-			
 			// 페이징 처리
 			PaginationVO pagination = new PaginationVO(commuBoardVO.getPageIndex(), commuBoardVO.getRecordCountPerPage(), 
 					   								   commuBoardVO.getPageSize(), commuListCount);
-			model.addAttribute("pagination", pagination);
-			
+			// 게시글 번호 넘버링 처리
 			int boardFrontNum = ((commuBoardVO.getPageIndex() - 1) * commuBoardVO.getRecordCountPerPage());
 			
+			model.addAttribute("pagination", pagination);
 			model.addAttribute("dbCommuBkmk", dbCommuBkmk);				
 			model.addAttribute("commuNm", commuList.get(0).getCommuNm());				
 			model.addAttribute("commuSeq", commuBoardVO.getCommuSeq());
 			model.addAttribute("commuBoardList", commuBoardList);
-			model.addAttribute("searchKeyword", searchKeyword);
-			model.addAttribute("searchCondition", searchCondition);
+			model.addAttribute("searchKeyword", commuBoardVO.getSearchKeyword());
+			model.addAttribute("searchCondition", commuBoardVO.getSearchCondition());
 			model.addAttribute("boardFrontNum", boardFrontNum);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		} catch (Exception e) { e.printStackTrace(); }
 		return "tiles/commu/commuBoard";
 	}
 	
@@ -279,6 +246,7 @@ public class CommuController {
 	
 	@RequestMapping("/commu/commuPostInsertView")
 	public String commuBoardInsertView(int commuSeq, Model model) {
+		// 커뮤니티 번호를 저장 후 게시글작성 페이지 이동
 		model.addAttribute("commuSeq", commuSeq);
 		return "tiles/commu/commuPostInsert";
 	}
@@ -292,14 +260,13 @@ public class CommuController {
 	
 	@RequestMapping("/commu/insertPost")
 	public String insertPost(@RequestPart(name = "file", required = false) List<MultipartFile> fileList, 
-							 CommuBoardVO commuBoardVO, 
-							 HttpSession session) {
-		
+							 CommuBoardVO commuBoardVO, HttpSession session) {
+		// 로그인한 사원의 사원정보 가져오기
 		EmpVO dbEmp = (EmpVO) session.getAttribute("EMP");
-		
-		logger.debug("commuBoardVO : {}", commuBoardVO);
+		// 입력한 게시글정보와 첨부파일정보 DB의 commuboard테이블에 저장
 		int insertCommuBoardRes = commuService.insertCommuBoard(fileList, commuBoardVO, dbEmp);
 		if(insertCommuBoardRes == 1) {
+			// 저장한 게시글의 게시글번호 가져오기
 			int commuBoardCurrval = commuService.selectCurrval();
 			return "redirect:/commu/commuPostView?boardSeq="+commuBoardCurrval;				
 		}else {
@@ -323,16 +290,15 @@ public class CommuController {
 	
 	@RequestMapping("/commu/commuPostView")
 	public String commuPostView(CommuBoardVO commuBoardVO, Model model) {
-		
+		// 선택한 커뮤니티 게시글 정보를 가지고 DB의 commuboard테이블에서 게시글번호와 선택한 게시글번호가 일치하는 데이터의 정보 가져오기 
 		Map<String, Object> commuBoardMap = commuService.selectCommuBoard(commuBoardVO);
 		if(commuBoardMap != null) {
-			model.addAttribute("commuBoard", commuBoardMap.get("dbCommuBoard"));
-			model.addAttribute("commuBoardFileList", commuBoardMap.get("commuBoardFileList"));
-			model.addAttribute("repleList", commuBoardMap.get("commuBoardRepleList"));
-			model.addAttribute("empTitle", commuBoardMap.get("empTitle"));
-			model.addAttribute("commuRepleEmpTitleList", commuBoardMap.get("commuRepleEmpTitleList"));
+			model.addAttribute("commuBoard", commuBoardMap.get("dbCommuBoard")); // 게시글 정보
+			model.addAttribute("commuBoardFileList", commuBoardMap.get("commuBoardFileList")); // 게시글 첨부파일 리스트 
+			model.addAttribute("repleList", commuBoardMap.get("commuBoardRepleList")); // 게시글 댓글 리스트
+			model.addAttribute("empTitle", commuBoardMap.get("empTitle")); // 게시글 작성자 직급
+			model.addAttribute("commuRepleEmpTitleList", commuBoardMap.get("commuRepleEmpTitleList")); // 댓글 작성자 직급
 		}
-		
 		return "tiles/commu/commuPostView";
 	}
 	
@@ -349,25 +315,13 @@ public class CommuController {
 	@RequestMapping("/commu/updateBoardView")
 	public String updateBoard(CommuBoardVO commuBoardVO, Model model) {
 		
-		logger.debug("===========================================================================================");
-		logger.debug("");
-		logger.debug("");
-		logger.debug("commuBoardVO : {}", commuBoardVO);
-		logger.debug("");
-		logger.debug("");
-		logger.debug("===========================================================================================");
-		
-		
 		Map<String, Object> commuBoardMap = commuService.selectCommuBoard(commuBoardVO);
-		
 		CommuBoardVO dbCommuBoardVO = (CommuBoardVO) commuBoardMap.get("dbCommuBoard");
 		List<CommuBoardFileVO> commuBoardFileList = (List<CommuBoardFileVO>) commuBoardMap.get("commuBoardFileList");
-		
 		if(dbCommuBoardVO != null) {
 			model.addAttribute("commuBoard", dbCommuBoardVO);
 			model.addAttribute("commuBoardFileList", commuBoardFileList);
 		}
-			
 		return "tiles/commu/commuPostUpdate";
 	}
 	
@@ -387,20 +341,7 @@ public class CommuController {
 								 CommuBoardVO commuBoardVO, 
 								 @RequestPart(name = "file", required = false) List<MultipartFile> fileList,
 								 @RequestParam(name = "delFile", required = false) List<Integer> delFileList) {
-	
-		logger.debug("==========================================================================");
-		logger.debug("");
-		logger.debug("");
-		logger.debug("fileList : {}", fileList);
-		logger.debug("commuBoardVO : {}", commuBoardVO);
-		
-		// size or null
-		logger.debug("delFileList : {}", delFileList);
-		logger.debug("");
-		logger.debug("");
-		logger.debug("==========================================================================");
-		
-		
+		// 게시글 정보 수정
 		int updatePostResult = commuService.updatePost(session, commuBoardVO, fileList, delFileList);
 		
 		if(updatePostResult == 1) {
@@ -417,7 +358,7 @@ public class CommuController {
 	@RequestMapping("/commu/deleteCommuBoard")
 	public String deleteCommuBoard(HttpSession session, 
 			 					   CommuBoardVO commuBoardVO) {
-		
+		// 선택한 커뮤니티 정보와 세션정보를 가져가서 선택한 게시글의 상태코드를 'Y'에서 'N'으로 변경한다.
 		int delUpPostResult = commuService.delUpCommuBoard(session, commuBoardVO);
 		if(delUpPostResult == 1) {
 			return "redirect:/commu/commuBoardList?commuSeq="+commuBoardVO.getCommuSeq();
@@ -433,16 +374,14 @@ public class CommuController {
 	
 	@RequestMapping("/commu/repleRegist")
 	public String repleRegist(CommuBoardRepleVO commuRepleVO, HttpSession session) {
-		
+		// 작성한 댓글정보에서 개행문자인 '\n'을 '<br>'로 변경 후 setter에 대입한다.
 		String repleCont = commuRepleVO.getRepleCont().replace("\n", "<br>");
-		logger.debug("repleCont : {}", repleCont);
 		commuRepleVO.setRepleCont(repleCont);
-		
-		
+		// 로그인한 사원의 사원정보 가져오기
 		EmpVO dbEmp = (EmpVO) session.getAttribute("EMP");
 		commuRepleVO.setEmpId(dbEmp.getEmpId());
 		commuRepleVO.setEmpNm(dbEmp.getEmpNm());
-		
+		// 작성한 댓글 정보를 DB의 commureple테이블에 저장한다.
 		int insertRepleRes = commuService.insertCommuReple(commuRepleVO);
 		return "redirect:/commu/commuPostView?boardSeq="+commuRepleVO.getBoardSeq();
 	}

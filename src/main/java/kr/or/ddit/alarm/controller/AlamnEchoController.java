@@ -103,14 +103,13 @@ public class AlamnEchoController {
 	
 	
 	@RequestMapping("/alarm/alarmPostInsert")
-	public String alarmPostInsert(HttpSession session, String receiverId, String alarmCont, String alarmLinkCont) {
-		
-		logger.debug("alarmCont : {}", alarmCont);
-		
+	public String alarmPostInsert(HttpSession session, String receiverId, 
+								  String alarmCont, String alarmLinkCont) {
 		// 보내는 사람
 		EmpVO empVO = (EmpVO) session.getAttribute("EMP");
 		String sender = empVO.getEmpId();
 		try {
+			// 알람 정보 DB의 알람테이블에 저장
 			int insertAlarm  = alarmService.insertPostAlarm(sender, receiverId, alarmCont, alarmLinkCont);
 		} catch (Exception e) {
 			e.printStackTrace();
